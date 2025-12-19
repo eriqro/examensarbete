@@ -1,3 +1,5 @@
-C:\Users\eric.rocklind\Documents\examensarbete\.gitignore
-C:\Users\eric.rocklind\Documents\examensarbete\Frontend\AppConfig\appsettings.Development.Local.json
-C:\Users\eric.rocklind\Documents\examensarbete\Backend\appsettings.Development.Local.json
+# Ignore local appsettings for Frontend
+Frontend/AppConfig/appsettings.Development.Local.json
+
+# Ignore local appsettings for Backend
+Backend/appsettings.Development.Local.json
