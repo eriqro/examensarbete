@@ -1,9 +1,9 @@
-# **SOUNDSYNC – MUSIC PLAYER**
+# **TUNE – MUSIC PLAYER**
 ---
 
 ## **BESKRIVNING**
 
-SoundSync är ett musikhanteringssystem som låter användare ladda upp, lagra, spela upp och dela sina egna ljudfiler även sådana som inte finns på större streamingplattformar  
+Tune är ett musikhanteringssystem som låter användare ladda upp, lagra, spela upp och dela sina egna ljudfiler även sådana som inte finns på större streamingplattformar  
 
 Målet är att skapa en webbaserad tjänst eller mjukvara där användare kan synka sin musik mellan flera enheter och även dela låtar med andra
 
@@ -13,7 +13,7 @@ Målet är att skapa en webbaserad tjänst eller mjukvara där användare kan sy
 
 ### **PRODUKTMÅL**
 
-Målet med SoundSync är att skapa ett system där användare kan ladda upp egna ljudfiler, lagra och spela upp musik, synka filer mellan olika enheter och dela musik med andra användare
+Målet med Tune är att skapa ett system där användare kan ladda upp egna ljudfiler, lagra och spela upp musik, synka filer mellan olika enheter och dela musik med andra användare
 
 ---
 
