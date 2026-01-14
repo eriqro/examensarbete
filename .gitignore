@@ -2,4 +2,14 @@
 Frontend/AppConfig/appsettings.Development.Local.json
 
 # Ignore local appsettings for Backend
+Backend/Properties/appsettings.Development.Local.json
 Backend/appsettings.Development.Local.json
+
+# Build and IDE files
+bin/
+obj/
+.vs/
+*.user
+*.suo
+.vscode/
+node_modules/

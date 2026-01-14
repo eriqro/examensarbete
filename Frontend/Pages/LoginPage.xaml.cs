@@ -1,12 +1,9 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
-using MySqlConnector;
-using System.Threading.Tasks;
-using BCrypt.Net;
+using System.Net.Http.Json;
 using Tune.Frontend.Helpers;
-using Microsoft.VisualBasic;
-using System.Security.Cryptography.X509Certificates;
+using Tune.Frontend.Services;
 
 namespace Tune.Frontend.Pages
 {
@@ -14,6 +11,7 @@ namespace Tune.Frontend.Pages
     {
         public static int loggedInUserId{get;set;}=-1;
         public static string loggedInUser{get;set;}=string.Empty;
+        public static string Token { get; set; } = string.Empty;
     }
     public partial class LoginPage : Page
     {
@@ -29,45 +27,58 @@ namespace Tune.Frontend.Pages
         private async void Login_Click(object sender, RoutedEventArgs e)
         {
             string password = PasswordBox.Password;
-            string connStr = AppConfig.GetConnectionString("MariaDB");
+            string usernameOrEmail = UsernameBox.Text;
 
+            // Configure API base
+            var baseUrl = AppConfig.Configuration["BackendApiBaseUrl"];
+            Tune.Frontend.Services.ApiClient.SetBaseUrl(baseUrl);
 
-            using var conn = new MySqlConnection(connStr);
-            await conn.OpenAsync();
-
-            string sqlGetAllHashes = "SELECT hashpassword, userID, username FROM users";
-            using var cmd = new MySqlCommand(sqlGetAllHashes, conn);
-            using var reader = await cmd.ExecuteReaderAsync();
-
-            bool passwordMatched = false;
-            while (await reader.ReadAsync())
+            var payload = new { UsernameOrEmail = usernameOrEmail, Password = password };
+            try
             {
-                string storedHash = reader.GetString("hashpassword");
-                int userID= reader.GetInt32("userID");
-                string username=reader.GetString("username");
-
-                if (BCrypt.Net.BCrypt.Verify(password, storedHash))
-                {   
-                    passwordMatched = true;
-                    
-                    CurrentUser.loggedInUserId = userID;
-                    CurrentUser.loggedInUser = username;
-                    break;
+                var resp = await Tune.Frontend.Services.ApiClient.Client.PostAsJsonAsync("/auth/login", payload);
+                if (!resp.IsSuccessStatusCode)
+                {
+                    ShowNotification("Login failed: check username/email and password", isError: true);
+                    return;
                 }
-            }
-            if (passwordMatched == true)
-            {
-                MessageBox.Show("Login Successful");
+
+                var data = await resp.Content.ReadFromJsonAsync<LoginResponse>();
+                if (data == null)
+                {
+                    ShowNotification("Unexpected response from server", isError: true);
+                    return;
+                }
+
+                CurrentUser.loggedInUserId = data.userId;
+                CurrentUser.loggedInUser = data.username;
+                CurrentUser.Token = data.token;
+                Tune.Frontend.Services.ApiClient.SetToken(CurrentUser.Token);
+
+                ShowNotification("Login Successful", isError: false);
+                await System.Threading.Tasks.Task.Delay(800);
                 NavigationService?.Navigate(new MainPage());
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("Password is incorrect or user does not exist");
+                ShowNotification($"Error logging in: {ex.Message}", isError: true);
             }
         }
+
+        // Show notification in the notification bar
+        private void ShowNotification(string message, bool isError)
+        {
+            NotificationText.Text = message;
+            NotificationText.Foreground = isError ? new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.OrangeRed) : new System.Windows.Media.SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#8AF3FF"));
+            NotificationBar.Background = isError ? new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(40, 20, 20)) : new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(35, 39, 47));
+            NotificationBar.Visibility = Visibility.Visible;
+        }
+
         private void SignUp_click(object sender, RoutedEventArgs e)
         {
             NavigationService?.Navigate(new SignUpPage());
         }
+
+        private record LoginResponse(string token, int userId, string username);
     }
 }

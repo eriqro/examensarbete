@@ -58,3 +58,17 @@ Vid inloggning på en annan enhet blir alla filer tillgängliga direkt och musik
 ## **TEKNISKA LÖSNINGAR**
 
 Här kan diagram, arkitekturbeskrivning och teknikstack läggas till senare
+
+
+## Authentication (JWT token)
+
+- Backend: added endpoints `POST /auth/register`, `POST /auth/login`, and protected `GET /auth/me`.
+- Configure JWT by setting `Jwt` section in `Backend/appsettings.Development.Local.json` (replace `REPLACE_THIS_WITH_A_STRONG_RANDOM_SECRET`).
+- The backend issues a JWT access token on successful register/login.
+
+- Frontend: `LoginPage` and `SignUpPage` now call the backend endpoints. Set `BackendApiBaseUrl` in `Frontend/AppConfig/appsettings.Development.Local.json` (default `http://localhost:5000`).
+- Tokens are stored in-memory and automatically attached to API requests via `Frontend/Services/ApiClient.cs`.
+
+Notes:
+- For production, set `RequireHttpsMetadata = true` in JWT bearer options and store secrets securely (environment variables or secret store).
+- Consider adding refresh tokens for long-lived sessions and persistent secure storage for tokens (Windows DPAPI, credential manager, or a secure vault).

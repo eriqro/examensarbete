@@ -2,5 +2,10 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Tune" Height="450" Width="800">
-    <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden"/>
+    <Grid>
+        <!-- Hidden MediaElement for persistent audio playback -->
+        <MediaElement x:Name="GlobalMediaPlayer" Visibility="Collapsed" LoadedBehavior="Manual" />
+        
+        <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden"/>
+    </Grid>
 </Window>

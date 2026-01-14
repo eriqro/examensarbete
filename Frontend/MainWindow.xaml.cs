@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using Tune.Frontend.Services;
 
 namespace Tune.Frontend
 {
@@ -8,6 +9,9 @@ namespace Tune.Frontend
         public MainWindow()
         {
             InitializeComponent();
+            
+            // Initialize the global media player service
+            MediaPlayerService.Initialize(GlobalMediaPlayer);
 
             MainFrame.Navigate(new Pages.LoginPage());
         }

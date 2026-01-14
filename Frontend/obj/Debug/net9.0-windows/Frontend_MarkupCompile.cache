@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-C:\Users\eric.rocklind\Documents\examensarbete\Frontend\obj\Debug\net9.0-windows\
+C:\Users\eric.rocklind\Documents\examensarbete\frontend\obj\Debug\net9.0-windows\
 Frontend
 none
 false
 TRACE;DEBUG;NET;NET9_0;NETCOREAPP;WINDOWS;WINDOWS7_0;NET5_0_OR_GREATER;NET6_0_OR_GREATER;NET7_0_OR_GREATER;NET8_0_OR_GREATER;NET9_0_OR_GREATER;NETCOREAPP3_0_OR_GREATER;NETCOREAPP3_1_OR_GREATER;WINDOWS7_0_OR_GREATER
-C:\Users\eric.rocklind\Documents\examensarbete\Frontend\App.xaml
-4-688152861
+C:\Users\eric.rocklind\Documents\examensarbete\frontend\App.xaml
+7-1163928559
 1-1393673575
-8-1629948041
+13-673211493
 212-1623361954
-MainWindow.xaml;Pages\LoginPage.xaml;Pages\MainPage.xaml;Pages\SignUpPage.xaml;
+MainWindow.xaml;Pages\LibraryPage.xaml;Pages\LoginPage.xaml;Pages\MainPage.xaml;Pages\ProfilePage.xaml;Pages\SignUpPage.xaml;Pages\UploadPage.xaml;
 
 False
 

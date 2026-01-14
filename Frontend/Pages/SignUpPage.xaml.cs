@@ -1,10 +1,10 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
-using MySqlConnector;
 using System.Threading.Tasks;
-using BCrypt.Net;
+using System.Net.Http.Json;
 using Tune.Frontend.Helpers;
+using Tune.Frontend.Services;
 
 namespace Tune.Frontend.Pages
 {
@@ -17,64 +17,89 @@ namespace Tune.Frontend.Pages
 
         // Sign Up button click
         private async void SignUp_Click(object sender, RoutedEventArgs e)
-{
-    string username = UsernameBox.Text;
-    string password = PasswordBox.Password;
-    string confirmPassword = ConfirmPasswordBox.Password;
-    string email = EmailBox.Text;
+        {
+            string username = UsernameBox.Text;
+            string password = PasswordBox.Password;
+            string confirmPassword = ConfirmPasswordBox.Password;
+            string email = EmailBox.Text;
 
-    // Basic validation
-    if (string.IsNullOrWhiteSpace(username) ||
-        string.IsNullOrWhiteSpace(password) ||
-        string.IsNullOrWhiteSpace(confirmPassword) ||
-        string.IsNullOrWhiteSpace(email))
-    {
-        MessageBox.Show("All fields must be filled!");
-        return;
-    }
+            // Basic validation
+            if (string.IsNullOrWhiteSpace(username) ||
+                string.IsNullOrWhiteSpace(password) ||
+                string.IsNullOrWhiteSpace(confirmPassword) ||
+                string.IsNullOrWhiteSpace(email))
+            {
+                ShowNotification("All fields must be filled!", isError: true);
+                return;
+            }
 
-    if (password != confirmPassword)
-    {
-        MessageBox.Show("Passwords do not match!");
-        return;
-    }
+            if (password != confirmPassword)
+            {
+                ShowNotification("Passwords do not match!", isError: true);
+                return;
+            }
 
-    // Check if username already exists
-    if (await IsUsernameTaken(username))
-    {
-        MessageBox.Show("Username is already taken. Please choose another.");
-        return;
-    }
+            // Call backend register
+            var baseUrl = AppConfig.Configuration["BackendApiBaseUrl"];
+            Tune.Frontend.Services.ApiClient.SetBaseUrl(baseUrl);
 
-    // Insert new user
-    try
-    {
-        await CreateNewUser(username, password, email);
-        MessageBox.Show("User created successfully!");
-        NavigationService?.Navigate(new LoginPage());
-    }
-    catch (Exception ex)
-    {
-        MessageBox.Show($"Email is already in use, if this wasen't you please check ur email");
-    }
-}
+            var payload = new { Username = username, Email = email, Password = password };
+            try
+            {
+                var resp = await Tune.Frontend.Services.ApiClient.Client.PostAsJsonAsync("/auth/register", payload);
+                if (!resp.IsSuccessStatusCode)
+                {
+                    ShowNotification("Sign up failed: username or email may already be in use", isError: true);
+                    return;
+                }
+
+                var data = await resp.Content.ReadFromJsonAsync<RegisterResponse>();
+                if (data == null)
+                {
+                    ShowNotification("Unexpected server response", isError: true);
+                    return;
+                }
+
+                // Store token and navigate
+                Tune.Frontend.Pages.CurrentUser.Token = data.token;
+                Tune.Frontend.Pages.CurrentUser.loggedInUserId = data.userId;
+                Tune.Frontend.Pages.CurrentUser.loggedInUser = data.username;
+                Tune.Frontend.Services.ApiClient.SetToken(data.token);
+
+                ShowNotification("Account created and logged in", isError: false);
+                await Task.Delay(800);
+                NavigationService?.Navigate(new MainPage());
+
+            }
+            catch (Exception ex)
+            {
+                ShowNotification($"Error creating account: {ex.Message}", isError: true);
+            }
+        }
+
+        // Show notification in the notification bar
+        private void ShowNotification(string message, bool isError)
+        {
+            NotificationText.Text = message;
+            NotificationText.Foreground = isError ? new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.OrangeRed) : new System.Windows.Media.SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#8AF3FF"));
+            NotificationBar.Background = isError ? new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(40, 20, 20)) : new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(35, 39, 47));
+            NotificationBar.Visibility = Visibility.Visible;
+        }
 
 private async Task<bool> IsUsernameTaken(string username)
 {
-    string connStr = AppConfig.GetConnectionString("MariaDB");
+    var baseUrl = AppConfig.Configuration["BackendApiBaseUrl"];
+    Tune.Frontend.Services.ApiClient.SetBaseUrl(baseUrl);
 
-    using var conn = new MySqlConnection(connStr);
-    await conn.OpenAsync();
-
-    string sql = "SELECT COUNT(*) FROM users WHERE username = @username";
-    using var cmd = new MySqlCommand(sql, conn);
-    cmd.Parameters.AddWithValue("@username", username);
-
-    var result = await cmd.ExecuteScalarAsync();
-    int count = Convert.ToInt32(result);
-
-    return count > 0;
+    var users = await Tune.Frontend.Services.ApiClient.Client.GetFromJsonAsync<UserDto[]>("/users");
+    if (users == null) return false;
+    foreach (var u in users)
+        if (string.Equals(u.Username, username, StringComparison.OrdinalIgnoreCase))
+            return true;
+    return false;
 }
+
+private record UserDto(int UserID, string Username, string Email);
 
 
         private void BackToLogin_Click(object sender, RoutedEventArgs e)
@@ -82,27 +107,6 @@ private async Task<bool> IsUsernameTaken(string username)
             NavigationService?.Navigate(new LoginPage());
         }
 
-        public async Task CreateNewUser(string username, string password, string email)
-        {
-            // Hash password
-            string hashPassword = BCrypt.Net.BCrypt.HashPassword(password);
-
-            string connStr = AppConfig.GetConnectionString("MariaDB");
-
-            using var conn = new MySqlConnection(connStr);
-            await conn.OpenAsync();
-
-            // Insert user
-            string sql = @"INSERT INTO users (username, email, hashpassword)
-                           VALUES (@username, @email, @hashpassword)";
-
-            using var cmd = new MySqlCommand(sql, conn);
-            cmd.Parameters.AddWithValue("@username", username);
-            cmd.Parameters.AddWithValue("@email", email); 
-            cmd.Parameters.AddWithValue("@hashpassword", hashPassword);
-
-            await cmd.ExecuteNonQueryAsync();
-
-        }
+        public record RegisterResponse(string token, int userId, string username);
     }
 }

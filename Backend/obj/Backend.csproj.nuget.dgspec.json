@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\eric.rocklind\\Documents\\examensarbete\\Backend\\Backend.csproj": {}
+    "C:\\Users\\eric.rocklind\\Documents\\examensarbete\\backend\\Backend.csproj": {}
   },
   "projects": {
-    "C:\\Users\\eric.rocklind\\Documents\\examensarbete\\Backend\\Backend.csproj": {
+    "C:\\Users\\eric.rocklind\\Documents\\examensarbete\\backend\\Backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\eric.rocklind\\Documents\\examensarbete\\Backend\\Backend.csproj",
+        "projectUniqueName": "C:\\Users\\eric.rocklind\\Documents\\examensarbete\\backend\\Backend.csproj",
         "projectName": "Backend",
-        "projectPath": "C:\\Users\\eric.rocklind\\Documents\\examensarbete\\Backend\\Backend.csproj",
+        "projectPath": "C:\\Users\\eric.rocklind\\Documents\\examensarbete\\backend\\Backend.csproj",
         "packagesPath": "C:\\Users\\eric.rocklind\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\eric.rocklind\\Documents\\examensarbete\\Backend\\obj\\",
+        "outputPath": "C:\\Users\\eric.rocklind\\Documents\\examensarbete\\backend\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -50,17 +50,41 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "dependencies": {
+            "BCrypt.Net-Next": {
+              "target": "Package",
+              "version": "[4.0.2, )"
+            },
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[9.0.11, )"
+            },
+            "Microsoft.OpenApi": {
+              "target": "Package",
+              "version": "[1.6.17, )"
+            },
+            "MySql.Data": {
+              "target": "Package",
+              "version": "[9.5.0, )"
             },
             "MySqlConnector": {
               "target": "Package",
               "version": "[2.5.0, )"
             },
+            "NAudio": {
+              "target": "Package",
+              "version": "[2.2.1, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
-              "version": "[10.0.1, )"
+              "version": "[6.5.0, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[7.0.3, )"
             }
           },
           "imports": [
