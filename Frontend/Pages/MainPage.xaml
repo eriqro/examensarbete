@@ -6,7 +6,7 @@
 
     <Page.Resources>
 
-                <!-- Footer Music Control Button Style -->
+                <!-- Styling for playback controls -->
                 <Style x:Key="FooterMusicButtonStyle" TargetType="Button">
                     <Setter Property="Background" Value="#23272F"/>
                     <Setter Property="BorderBrush" Value="transparent"/>
@@ -41,7 +41,7 @@
                         </Setter.Value>
                     </Setter>
                 </Style>
-        <!-- Title Style -->
+        <!-- Large text at the top -->
         <Style x:Key="TitleTextStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="28"/>
             <Setter Property="FontWeight" Value="Bold"/>
@@ -50,7 +50,7 @@
             <Setter Property="Margin" Value="0,24,0,12"/>
         </Style>
 
-        <!-- Info Text Style -->
+        <!-- Smaller descriptive text -->
         <Style x:Key="InfoTextStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="18"/>
             <Setter Property="Foreground" Value="White"/>
@@ -95,7 +95,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <!-- Popup Button Style -->
+        <!-- Buttons inside dropdown menus -->
         <Style x:Key="PopupButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderBrush" Value="Transparent"/>
@@ -148,19 +148,19 @@
             </Setter>
         </Style>
 
-        <!-- DropShadowEffect Resource for modern look -->
+        <!-- Shadow effect for depth -->
         <DropShadowEffect x:Key="DropShadowEffect" BlurRadius="12" ShadowDepth="0" Color="#80000000" Opacity="0.25"/>
     </Page.Resources>
 
     <Grid>
-        <!-- Define three rows: Header, Content, Footer -->
+        <!-- Layout: header, content, footer -->
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/> <!-- Header -->
             <RowDefinition Height="*"/>    <!-- Main Content -->
             <RowDefinition Height="Auto"/> <!-- Footer -->
         </Grid.RowDefinitions>
 
-        <!-- HEADER -->
+        <!-- Top navigation bar -->
         <Border Grid.Row="0" Height="88" CornerRadius="0,0,6,6" Margin="0,0,0,0" Padding="0" Background="#23272F">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -183,7 +183,7 @@
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <TextBlock Text="Logged in as: " Foreground="#8AF3FF" FontWeight="Bold" FontSize="16" VerticalAlignment="Center"/>
                         <TextBlock x:Name="UsernameDisplay" Foreground="White" FontWeight="SemiBold" FontSize="16" VerticalAlignment="Center" Margin="8,0,0,0"/>
-                        <!-- Profile Button -->
+                        <!-- User icon button -->
                         <Button x:Name="ProfileMenuButton"
                                 Width="28" Height="28"
                                 Margin="10,0,0,0"
@@ -206,7 +206,7 @@
                                 </Canvas>
                             </Viewbox>
                         </Button>
-                        <!-- Dropdown Popup -->
+                        <!-- Menu that pops up when clicking profile -->
                         <Popup x:Name="ProfileMenuPopup"
                                PlacementTarget="{Binding ElementName=ProfileMenuButton}"
                                Placement="Bottom"
@@ -225,7 +225,7 @@
             </Grid>
         </Border>
 
-        <!-- MAIN CONTENT -->
+        <!-- Song list and controls area -->
         <StackPanel Grid.Row="1" VerticalAlignment="Top" Margin="24,0,24,0">
             <TextBlock Text="My Songs" Style="{StaticResource TitleTextStyle}"/>
             <ListBox x:Name="SongsListBox" Background="Transparent" BorderThickness="0" Margin="0,12,0,0">

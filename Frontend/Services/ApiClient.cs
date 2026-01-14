@@ -21,7 +21,7 @@ namespace Tune.Frontend.Services
 
         public static void SetBaseUrl(string baseUrl)
         {
-            // Only set BaseAddress if not set yet
+            // Don't overwrite the URL if it's already set
             if (_client == null)
             {
                 _client = new HttpClient { BaseAddress = new Uri(baseUrl) };
@@ -30,7 +30,7 @@ namespace Tune.Frontend.Services
             {
                 _client.BaseAddress = new Uri(baseUrl);
             }
-            // If already set, do nothing (cannot change after first request)
+            // Can't change base address once it's set
         }
 
         public static void SetToken(string token)

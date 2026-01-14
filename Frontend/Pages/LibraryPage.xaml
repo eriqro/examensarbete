@@ -5,7 +5,7 @@
     Background="#2E2E2E">
 
   <Page.Resources>
-    <!-- Copy styles from MainPage for header/footer consistency -->
+    <!-- Reusing styles from main page -->
     <Style x:Key="FooterMusicButtonStyle" TargetType="Button">
       <Setter Property="Background" Value="#23272F"/>
       <Setter Property="BorderBrush" Value="transparent"/>
@@ -150,7 +150,7 @@
       <RowDefinition Height="Auto"/>
     </Grid.RowDefinitions>
 
-    <!-- HEADER -->
+    <!-- Top navigation bar -->
     <Border Grid.Row="0" Height="88" CornerRadius="0,0,6,6" Margin="0,0,0,0" Padding="0" Background="#23272F">
       <Grid>
         <Grid.ColumnDefinitions>
@@ -173,7 +173,7 @@
           <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
             <TextBlock Text="Logged in as: " Foreground="#8AF3FF" FontWeight="Bold" FontSize="16" VerticalAlignment="Center"/>
             <TextBlock x:Name="UsernameDisplay" Foreground="White" FontWeight="SemiBold" FontSize="16" VerticalAlignment="Center" Margin="8,0,0,0"/>
-            <!-- Profile Button -->
+            <!-- User icon button -->
             <Button x:Name="ProfileMenuButton" Width="28" Height="28" Margin="10,0,0,0" Padding="0" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Cursor="Hand" Click="ProfileMenuButton_Click">
               <Button.Template>
                 <ControlTemplate TargetType="Button">
@@ -188,7 +188,7 @@
                 </Canvas>
               </Viewbox>
             </Button>
-            <!-- Dropdown Popup -->
+            <!-- Menu that pops up when clicking profile -->
             <Popup x:Name="ProfileMenuPopup" PlacementTarget="{Binding ElementName=ProfileMenuButton}" Placement="Bottom" StaysOpen="False" AllowsTransparency="True" PopupAnimation="Fade">
               <Border Background="#23272F" CornerRadius="8" Padding="16" SnapsToDevicePixels="True" MinWidth="160">
                 <StackPanel>
@@ -202,13 +202,13 @@
       </Grid>
     </Border>
 
-    <!-- MAIN CONTENT -->
+    <!-- Page content area -->
     <StackPanel Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Center">
       <TextBlock Text="Library" Style="{StaticResource TitleTextStyle}"/>
       <TextBlock Text="Check the main page to manage your songs" Style="{StaticResource InfoTextStyle}" Margin="0,24,0,0"/>
     </StackPanel>
 
-    <!-- FOOTER (Music Controls) -->
+    <!-- Bottom playback controls -->
     <Border Grid.Row="2" Height="64" CornerRadius="6,6,0,0" Margin="0,0,0,0" Padding="0" Background="#23272F">
       <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0">
         <Button Style="{StaticResource FooterMusicButtonStyle}">

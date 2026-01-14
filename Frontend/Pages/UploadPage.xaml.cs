@@ -20,7 +20,7 @@ namespace Tune.Frontend.Pages
         }
         private async void UploadSong_Click(object sender, RoutedEventArgs e)
         {
-            // Get song name and file path
+            // Make sure they filled in both fields
             string songName = SongName.Text;
             string filePath = FilePathTextBox.Text;
             if (string.IsNullOrWhiteSpace(songName) || string.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath))
@@ -29,7 +29,7 @@ namespace Tune.Frontend.Pages
                 return;
             }
 
-            // Ensure API base URL is set
+            // Point the API client at the backend
             var baseUrl = Tune.Frontend.Helpers.AppConfig.Configuration["BackendApiBaseUrl"];
             Tune.Frontend.Services.ApiClient.SetBaseUrl(baseUrl);
 
@@ -37,7 +37,7 @@ namespace Tune.Frontend.Pages
             var content = new MultipartFormDataContent();
             content.Add(new StringContent(songName), "NameOfSong");
             content.Add(new ByteArrayContent(fileBytes), "mp3_file", Path.GetFileName(filePath));
-            // Thumbnail can be added similarly if available
+            // Could add thumbnail here too if we had one
 
             try
             {
@@ -45,7 +45,7 @@ namespace Tune.Frontend.Pages
                 if (response.IsSuccessStatusCode)
                 {
                     MessageBox.Show("Song uploaded successfully!");
-                    // Navigate to LibraryPage after upload
+                    // Jump to library to see the song
                     var mainWindow = Application.Current.MainWindow as Tune.Frontend.MainWindow;
                     mainWindow?.MainFrame.Navigate(new LibraryPage());
                 }

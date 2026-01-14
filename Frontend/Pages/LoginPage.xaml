@@ -55,7 +55,7 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <!-- Notification Bar -->
+        <!-- Message bar at top -->
         <Border Grid.Row="0" x:Name="NotificationBar" Background="#23272F" CornerRadius="8" Margin="0,16,0,8" Padding="10" Visibility="Collapsed">
             <TextBlock x:Name="NotificationText" Foreground="#8AF3FF" FontSize="15" TextWrapping="Wrap"/>
         </Border>

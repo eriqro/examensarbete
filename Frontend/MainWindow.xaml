@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Tune" Height="450" Width="800">
     <Grid>
-        <!-- Hidden MediaElement for persistent audio playback -->
+        <!-- Audio player that stays alive across pages -->
         <MediaElement x:Name="GlobalMediaPlayer" Visibility="Collapsed" LoadedBehavior="Manual" />
         
         <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden"/>

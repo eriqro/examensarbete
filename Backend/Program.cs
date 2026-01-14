@@ -8,28 +8,28 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 
-// Build the WebApplication
+// Set up the web app builder
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-// Load local development secrets (overrides appsettings)
+// Pull in local dev settings (won't exist in production, that's fine)
 builder.Configuration.AddJsonFile(
     "appsettings.Development.Local.json",
     optional: true,
     reloadOnChange: true
 );
 
-// Register MySqlConnection as transient service
+// Wire up database connection
 builder.Services.AddTransient<MySqlConnection>(_ =>
     new MySqlConnection(builder.Configuration.GetConnectionString("MariaDB")!)
 );
 
-// Add Swagger/OpenAPI for testing
+// Enable Swagger for API testing
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Configure authentication/authorization
+// JWT authentication setup
 var jwtSection = builder.Configuration.GetSection("Jwt");
 var jwtKey = jwtSection.GetValue<string>("Key")!;
 var jwtIssuer = jwtSection.GetValue<string>("Issuer");
@@ -42,7 +42,7 @@ builder.Services.AddAuthentication(options =>
 })
     .AddJwtBearer(options =>
     {
-        options.RequireHttpsMetadata = false; // Set true in production
+        options.RequireHttpsMetadata = false; // Turn this on for production
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
@@ -58,7 +58,7 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization();
 
-// Add CORS to allow frontend access
+// Allow frontend to call our API
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
@@ -71,14 +71,14 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Enable Swagger only in Development
+// Swagger is dev-only
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-// Test route
+// Quick sanity check endpoint
 app.MapGet("/", () => "Backend is running!");
 
 app.UseCors();
@@ -88,7 +88,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// Helper: generate JWT token
+// Builds JWT tokens for logged in users
 string GenerateJwtToken(int userId, string username)
 {
     var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
@@ -111,7 +111,7 @@ string GenerateJwtToken(int userId, string username)
     return new JwtSecurityTokenHandler().WriteToken(token);
 }
 
-// Auth: register
+// Create new account
 app.MapPost("/auth/register", async (MySqlConnection conn, RegisterRequest req) =>
 {
     if (string.IsNullOrWhiteSpace(req.Username) || string.IsNullOrWhiteSpace(req.Password) || string.IsNullOrWhiteSpace(req.Email))
@@ -119,7 +119,7 @@ app.MapPost("/auth/register", async (MySqlConnection conn, RegisterRequest req) 
 
     await conn.OpenAsync();
 
-    // Check if existing
+    // See if username or email already exists
     using (var check = new MySqlCommand("SELECT COUNT(*) FROM users WHERE username = @u OR email = @e", conn))
     {
         check.Parameters.AddWithValue("@u", req.Username);
@@ -144,7 +144,7 @@ app.MapPost("/auth/register", async (MySqlConnection conn, RegisterRequest req) 
     }
 });
 
-// Auth: login
+// Login existing user
 app.MapPost("/auth/login", async (MySqlConnection conn, LoginRequest req) =>
 {
     await conn.OpenAsync();
@@ -166,7 +166,7 @@ app.MapPost("/auth/login", async (MySqlConnection conn, LoginRequest req) =>
     return Results.Ok(new { token, userId = id, username });
 });
 
-// Protected: get current user
+// Get current logged in user info
 app.MapGet("/auth/me", async (HttpContext http, MySqlConnection conn) =>
 {
     var userIdClaim = http.User.FindFirst(JwtRegisteredClaimNames.Sub);
@@ -186,7 +186,7 @@ app.MapGet("/auth/me", async (HttpContext http, MySqlConnection conn) =>
     return Results.Ok(new { userID = reader.GetInt32("userID"), username = reader.GetString("username"), email = reader.GetString("email") });
 }).RequireAuthorization();
 
-// Get all users
+// List all users (probably for admin purposes)
 app.MapGet("/users", async (MySqlConnection conn) =>
 {
     await conn.OpenAsync();
@@ -209,7 +209,7 @@ app.MapGet("/users", async (MySqlConnection conn) =>
 });
 
 
-// Get all songs/mp3s
+// Fetch all songs from the database
 
 app.MapGet("/songs", async (MySqlConnection conn) =>
 {
@@ -239,6 +239,6 @@ app.MapGet("/songs", async (MySqlConnection conn) =>
 
 app.Run();
 
-// Request DTOs
+// Data transfer objects for API
 public record RegisterRequest(string Username, string Email, string Password);
 public record LoginRequest(string UsernameOrEmail, string Password);

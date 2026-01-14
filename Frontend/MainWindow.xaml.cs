@@ -10,7 +10,7 @@ namespace Tune.Frontend
         {
             InitializeComponent();
             
-            // Initialize the global media player service
+            // Hook up the shared media player
             MediaPlayerService.Initialize(GlobalMediaPlayer);
 
             MainFrame.Navigate(new Pages.LoginPage());
