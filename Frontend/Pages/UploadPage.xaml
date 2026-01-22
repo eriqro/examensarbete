@@ -169,9 +169,6 @@
           <Image Source="../imgs/Logo.png" Stretch="Uniform" Width="28" Height="28"/>
         </Button>
         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="1" Margin="24,0,0,0">
-          <Button Style="{StaticResource HeaderButtons}" Click="LibraryButton_Click">
-            <Image Source="../imgs/Library.png"/>
-          </Button>
           <Button Style="{StaticResource HeaderButtons}" Click="UploadButton_Click">
             <Image Source="../imgs/Upload.png"/>
           </Button>
@@ -257,17 +254,6 @@
 
     <!-- FOOTER (Music Controls) -->
     <Border Grid.Row="2" Height="64" CornerRadius="6,6,0,0" Margin="0,0,0,0" Padding="0" Background="#23272F">
-      <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0">
-        <Button Style="{StaticResource FooterMusicButtonStyle}">
-          <Image Source="../imgs/goback.png" Stretch="Uniform" Width="28" Height="28"/>
-        </Button>
-        <Button Style="{StaticResource FooterMusicButtonStyle}">
-          <Image Source="../imgs/play.png" Stretch="Uniform" Width="28" Height="28"/>
-        </Button>
-        <Button Style="{StaticResource FooterMusicButtonStyle}">
-          <Image Source="../imgs/skip.png" Stretch="Uniform" Width="28" Height="28"/>
-        </Button>
-      </StackPanel>
     </Border>
   </Grid>
 </Page>

@@ -218,7 +218,7 @@ app.MapGet("/songs", async (MySqlConnection conn) =>
     var songs = new List<object>();
 
     using var cmd = new MySqlCommand(
-        "SELECT NameOfSong, length, thumbnail, creatorUserID FROM mp3s",
+        "SELECT m.NameOfSong, m.length, m.thumbnail, u.username FROM mp3s m JOIN users u ON m.creatorUserID = u.userID",
         conn
     );
     using var reader = await cmd.ExecuteReaderAsync();
@@ -229,7 +229,7 @@ app.MapGet("/songs", async (MySqlConnection conn) =>
             NameOfSong = reader.GetString("NameOfSong"),
             Length = reader.GetTimeSpan("length"),
             Thumbnail = reader["thumbnail"] == DBNull.Value ? null : reader["thumbnail"],
-            CreatorUserID = reader.GetInt32("creatorUserID")
+            CreatorUsername = reader.GetString("username")
         });
     }
 

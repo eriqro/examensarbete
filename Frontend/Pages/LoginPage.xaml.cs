@@ -30,7 +30,7 @@ namespace Tune.Frontend.Pages
             string usernameOrEmail = UsernameBox.Text;
 
             // Set up the API URL
-            var baseUrl = AppConfig.Configuration["BackendApiBaseUrl"];
+            var baseUrl = AppConfig.GetBackendBaseUrl();
             Tune.Frontend.Services.ApiClient.SetBaseUrl(baseUrl);
 
             var payload = new { UsernameOrEmail = usernameOrEmail, Password = password };

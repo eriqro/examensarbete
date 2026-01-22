@@ -2,9 +2,11 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using Tune.Frontend.Pages;
+using Tune.Frontend.Models;
 using System.Collections.ObjectModel;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using Tune.Frontend.Helpers;
 
 namespace Tune.Frontend.Pages
 {
@@ -20,7 +22,7 @@ namespace Tune.Frontend.Pages
             int userId = CurrentUser.loggedInUserId;
             string username = CurrentUser.loggedInUser;
             UsernameDisplay.Text = username;
-            LoadSongs();
+            LoadAllSongs();
             var mediaElement = Services.MediaPlayerService.GetMediaElement();
             if (mediaElement != null)
             {
@@ -34,14 +36,14 @@ namespace Tune.Frontend.Pages
             UpdatePlayButtonIcon();
         }
 
-        private async void LoadSongs()
+        private async void LoadAllSongs()
         {
             try
             {
-                var baseUrl = Tune.Frontend.Helpers.AppConfig.Configuration["BackendApiBaseUrl"];
+                var baseUrl = AppConfig.GetBackendBaseUrl();
                 Tune.Frontend.Services.ApiClient.SetBaseUrl(baseUrl);
 
-                var response = await Services.ApiClient.Client.GetAsync("/api/songs/my-songs");
+                var response = await Services.ApiClient.Client.GetAsync("/api/songs");
                 if (response.IsSuccessStatusCode)
                 {
                     var songs = await response.Content.ReadFromJsonAsync<Song[]>();
@@ -58,7 +60,7 @@ namespace Tune.Frontend.Pages
                 else
                 {
                     var errorBody = await response.Content.ReadAsStringAsync();
-                    MessageBox.Show($"Failed to load songs: {errorBody}");
+                    MessageBox.Show($"Failed to load all songs: {errorBody}");
                 }
             }
             catch (Exception ex)
@@ -100,42 +102,28 @@ namespace Tune.Frontend.Pages
             }
         }
 
-        private async void DeleteSong_Click(object sender, RoutedEventArgs e)
+        private void FooterPlayPause_Click(object sender, RoutedEventArgs e)
         {
-            var button = sender as System.Windows.Controls.Button;
-            if (button?.DataContext is Song song)
+            var mediaElement = Services.MediaPlayerService.GetMediaElement();
+            if (mediaElement?.Source == null)
             {
-                var result = MessageBox.Show(
-                    $"Are you sure you want to delete '{song.NameOfSong}'?",
-                    "Confirm Delete",
-                    MessageBoxButton.YesNo,
-                    MessageBoxImage.Warning);
-
-                if (result == MessageBoxResult.Yes)
-                {
-                    try
-                    {
-                        var response = await Services.ApiClient.Client.DeleteAsync($"/api/songs/{song.Id}");
-                        if (response.IsSuccessStatusCode)
-                        {
-                            Songs.Remove(song);
-                            MessageBox.Show("Song deleted successfully!");
-                        }
-                        else
-                        {
-                            var errorBody = await response.Content.ReadAsStringAsync();
-                            MessageBox.Show($"Failed to delete song: {errorBody}");
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show($"Error deleting song: {ex.Message}");
-                    }
-                }
+                return;
             }
+
+            if (_isPlaying)
+            {
+                Services.MediaPlayerService.Pause();
+                _isPlaying = false;
+            }
+            else
+            {
+                Services.MediaPlayerService.Play();
+                _isPlaying = true;
+            }
+            UpdatePlayButtonIcon();
         }
 
-        private void FooterPlayPause_Click(object sender, RoutedEventArgs e)
+        private void PlayPauseButton_Click(object sender, RoutedEventArgs e)
         {
             var mediaElement = Services.MediaPlayerService.GetMediaElement();
             if (mediaElement?.Source == null)
@@ -155,6 +143,28 @@ namespace Tune.Frontend.Pages
                 _isPlaying = true;
             }
             UpdatePlayButtonIcon();
+        }
+
+        private void PreviousButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (Songs.Count == 0 || _currentSong == null) return;
+            
+            int currentIndex = Songs.IndexOf(_currentSong);
+            if (currentIndex > 0)
+            {
+                PlaySong_Click(PlayPauseButton, new RoutedEventArgs());
+            }
+        }
+
+        private void NextButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (Songs.Count == 0 || _currentSong == null) return;
+            
+            int currentIndex = Songs.IndexOf(_currentSong);
+            if (currentIndex < Songs.Count - 1)
+            {
+                PlaySong_Click(PlayPauseButton, new RoutedEventArgs());
+            }
         }
 
         private void FooterStop_Click(object sender, RoutedEventArgs e)
@@ -202,11 +212,6 @@ namespace Tune.Frontend.Pages
             mainWindow?.MainFrame.Navigate(new MainPage());
         }
 
-        private void LibraryButton_Click(object sender, RoutedEventArgs e)
-        {
-            var mainWindow = Application.Current.MainWindow as Tune.Frontend.MainWindow;
-            mainWindow?.MainFrame.Navigate(new LibraryPage());
-        }
 
         private void UploadButton_Click(object sender, RoutedEventArgs e)
         {

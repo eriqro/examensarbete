@@ -40,7 +40,7 @@ namespace Tune.Frontend.Pages
             }
 
             // Send registration to backend
-            var baseUrl = AppConfig.Configuration["BackendApiBaseUrl"];
+            var baseUrl = AppConfig.GetBackendBaseUrl();
             Tune.Frontend.Services.ApiClient.SetBaseUrl(baseUrl);
 
             var payload = new { Username = username, Email = email, Password = password };
@@ -88,7 +88,7 @@ namespace Tune.Frontend.Pages
 
 private async Task<bool> IsUsernameTaken(string username)
 {
-    var baseUrl = AppConfig.Configuration["BackendApiBaseUrl"];
+    var baseUrl = AppConfig.GetBackendBaseUrl();
     Tune.Frontend.Services.ApiClient.SetBaseUrl(baseUrl);
 
     var users = await Tune.Frontend.Services.ApiClient.Client.GetFromJsonAsync<UserDto[]>("/users");

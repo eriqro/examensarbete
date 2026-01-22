@@ -113,6 +113,42 @@ namespace Backend.Controllers
         }
 
         [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> GetAllSongs()
+        {
+            try
+            {
+                var songs = new List<object>();
+                using (var conn = new MySqlConnection(_connectionString))
+                {
+                    await conn.OpenAsync();
+                    var cmd = conn.CreateCommand();
+                    cmd.CommandText = "SELECT s.id, s.NameOfSong, s.length, u.username FROM songs s JOIN users u ON s.creatorUserID = u.userID";
+
+                    using (var reader = await cmd.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            songs.Add(new
+                            {
+                                Id = reader.GetInt32(0),
+                                NameOfSong = reader.GetString(1),
+                                Length = reader.GetDouble(2),
+                                CreatorUsername = reader.GetString(3)
+                            });
+                        }
+                    }
+                }
+
+                return Ok(songs);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = ex.Message, stackTrace = ex.StackTrace });
+            }
+        }
+
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSong(int id)
         {
@@ -151,21 +187,14 @@ namespace Backend.Controllers
         {
             try
             {
-                // Check ownership before streaming the file
-                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier) ?? User.FindFirst(ClaimTypes.Name);
-                if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int creatorUserID))
-                    return Unauthorized("User ID not found in token.");
-
                 byte[]? mp3Bytes = null;
                 string? fileName = null;
                 using (var conn = new MySqlConnection(_connectionString))
                 {
                     await conn.OpenAsync();
                     var cmd = conn.CreateCommand();
-                    // Pull the mp3 bytes if user owns it
-                    cmd.CommandText = "SELECT mp3_file, NameOfSong FROM songs WHERE id = @id AND creatorUserID = @userId";
+                    cmd.CommandText = "SELECT mp3_file, NameOfSong FROM songs WHERE id = @id";
                     cmd.Parameters.AddWithValue("@id", id);
-                    cmd.Parameters.AddWithValue("@userId", creatorUserID);
                     
                     using (var reader = await cmd.ExecuteReaderAsync())
                     {
@@ -178,7 +207,7 @@ namespace Backend.Controllers
                 }
 
                 if (mp3Bytes == null)
-                    return NotFound("Song not found or you don't have permission to access it.");
+                    return NotFound("Song not found.");
 
                 return File(mp3Bytes, "audio/mpeg", $"{fileName}.mp3");
             }

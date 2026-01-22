@@ -30,7 +30,7 @@ namespace Tune.Frontend.Pages
             }
 
             // Point the API client at the backend
-            var baseUrl = Tune.Frontend.Helpers.AppConfig.Configuration["BackendApiBaseUrl"];
+            var baseUrl = AppConfig.GetBackendBaseUrl();
             Tune.Frontend.Services.ApiClient.SetBaseUrl(baseUrl);
 
             byte[] fileBytes = await File.ReadAllBytesAsync(filePath);
@@ -45,9 +45,6 @@ namespace Tune.Frontend.Pages
                 if (response.IsSuccessStatusCode)
                 {
                     MessageBox.Show("Song uploaded successfully!");
-                    // Jump to library to see the song
-                    var mainWindow = Application.Current.MainWindow as Tune.Frontend.MainWindow;
-                    mainWindow?.MainFrame.Navigate(new LibraryPage());
                 }
                 else
                 {
@@ -67,11 +64,6 @@ namespace Tune.Frontend.Pages
             mainWindow?.MainFrame.Navigate(new MainPage());
         }
 
-        private void LibraryButton_Click(object sender, RoutedEventArgs e)
-        {
-            var mainWindow = Application.Current.MainWindow as Tune.Frontend.MainWindow;
-            mainWindow?.MainFrame.Navigate(new LibraryPage());
-        }
 
         private void UploadButton_Click(object sender, RoutedEventArgs e)
         {

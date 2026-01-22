@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Configuration;
+using System;
 using System.IO;
 
 namespace Tune.Frontend.Helpers
@@ -18,6 +19,14 @@ namespace Tune.Frontend.Helpers
         }
 
         public static string GetConnectionString(string name) =>
-            Configuration.GetConnectionString(name);
+            Configuration.GetConnectionString(name) ?? string.Empty;
+
+        public static string GetBackendBaseUrl()
+        {
+            var baseUrl = Configuration["BackendApiBaseUrl"];
+            if (string.IsNullOrWhiteSpace(baseUrl))
+                throw new InvalidOperationException("BackendApiBaseUrl is not configured.");
+            return baseUrl;
+        }
     }
 }

@@ -23,14 +23,12 @@ C:\Users\eric.rocklind\Documents\examensarbete\frontend\bin\Debug\net9.0-windows
 C:\Users\eric.rocklind\Documents\examensarbete\frontend\bin\Debug\net9.0-windows\runtimes\win\lib\net9.0\System.Text.Encodings.Web.dll
 C:\Users\eric.rocklind\Documents\examensarbete\frontend\obj\Debug\net9.0-windows\Frontend.csproj.AssemblyReference.cache
 C:\Users\eric.rocklind\Documents\examensarbete\frontend\obj\Debug\net9.0-windows\MainWindow.baml
-C:\Users\eric.rocklind\Documents\examensarbete\frontend\obj\Debug\net9.0-windows\Pages\LibraryPage.baml
 C:\Users\eric.rocklind\Documents\examensarbete\frontend\obj\Debug\net9.0-windows\Pages\LoginPage.baml
 C:\Users\eric.rocklind\Documents\examensarbete\frontend\obj\Debug\net9.0-windows\Pages\MainPage.baml
 C:\Users\eric.rocklind\Documents\examensarbete\frontend\obj\Debug\net9.0-windows\Pages\ProfilePage.baml
 C:\Users\eric.rocklind\Documents\examensarbete\frontend\obj\Debug\net9.0-windows\Pages\SignUpPage.baml
 C:\Users\eric.rocklind\Documents\examensarbete\frontend\obj\Debug\net9.0-windows\Pages\UploadPage.baml
 C:\Users\eric.rocklind\Documents\examensarbete\frontend\obj\Debug\net9.0-windows\MainWindow.g.cs
-C:\Users\eric.rocklind\Documents\examensarbete\frontend\obj\Debug\net9.0-windows\Pages\LibraryPage.g.cs
 C:\Users\eric.rocklind\Documents\examensarbete\frontend\obj\Debug\net9.0-windows\Pages\LoginPage.g.cs
 C:\Users\eric.rocklind\Documents\examensarbete\frontend\obj\Debug\net9.0-windows\Pages\MainPage.g.cs
 C:\Users\eric.rocklind\Documents\examensarbete\frontend\obj\Debug\net9.0-windows\Pages\ProfilePage.g.cs
