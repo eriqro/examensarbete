@@ -13,6 +13,8 @@ namespace Tune.Frontend.Pages
 {
     public partial class UploadPage : Page
     {
+        private byte[]? _selectedThumbnailBytes;
+
         public UploadPage()
         {
             InitializeComponent();
@@ -37,7 +39,12 @@ namespace Tune.Frontend.Pages
             var content = new MultipartFormDataContent();
             content.Add(new StringContent(songName), "NameOfSong");
             content.Add(new ByteArrayContent(fileBytes), "mp3_file", Path.GetFileName(filePath));
-            // Could add thumbnail here too if we had one
+            
+            // Add thumbnail if one was selected
+            if (_selectedThumbnailBytes != null && _selectedThumbnailBytes.Length > 0)
+            {
+                content.Add(new ByteArrayContent(_selectedThumbnailBytes), "thumbnail_file", "thumbnail.png");
+            }
 
             try
             {
@@ -126,11 +133,42 @@ namespace Tune.Frontend.Pages
                     bitmap.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad;
                     bitmap.EndInit();
                     ThumbnailPreview.Source = bitmap;
+                    
+                    // Compress the thumbnail image before uploading
+                    _selectedThumbnailBytes = CompressImage(dialog.FileName);
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show($"Failed to load image: {ex.Message}");
                 }
+            }
+        }
+
+        private byte[] CompressImage(string imagePath)
+        {
+            try
+            {
+                var bitmap = new System.Windows.Media.Imaging.BitmapImage();
+                bitmap.BeginInit();
+                bitmap.UriSource = new Uri(imagePath);
+                bitmap.DecodePixelWidth = 200; // Compress to max 200px width
+                bitmap.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad;
+                bitmap.EndInit();
+                bitmap.Freeze();
+
+                var encoder = new System.Windows.Media.Imaging.JpegBitmapEncoder { QualityLevel = 80 };
+                encoder.Frames.Add(System.Windows.Media.Imaging.BitmapFrame.Create(bitmap));
+
+                using (var ms = new MemoryStream())
+                {
+                    encoder.Save(ms);
+                    return ms.ToArray();
+                }
+            }
+            catch
+            {
+                // If compression fails, try to read the original file
+                return File.ReadAllBytes(imagePath);
             }
         }
     }

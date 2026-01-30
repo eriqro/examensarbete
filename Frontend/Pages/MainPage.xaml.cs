@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Tune.Frontend.Helpers;
+using System.Windows.Threading;
 
 namespace Tune.Frontend.Pages
 {
@@ -15,6 +16,8 @@ namespace Tune.Frontend.Pages
         public ObservableCollection<Song> Songs { get; set; } = new ObservableCollection<Song>();
         private Song? _currentSong;
         private bool _isPlaying = false;
+        private DispatcherTimer? _progressTimer;
+        private bool _isSliderDragging = false;
 
         public MainPage()
         {
@@ -27,7 +30,45 @@ namespace Tune.Frontend.Pages
             if (mediaElement != null)
             {
                 mediaElement.MediaEnded += MediaPlayer_MediaEnded;
+                mediaElement.MediaOpened += MediaElement_MediaOpened;
             }
+            
+            // Initialize progress timer
+            _progressTimer = new DispatcherTimer();
+            _progressTimer.Interval = TimeSpan.FromMilliseconds(100);
+            _progressTimer.Tick += UpdateProgress;
+            _progressTimer.Start();
+            
+            // Set initial volume
+            if (mediaElement != null)
+            {
+                mediaElement.Volume = 0.5;
+            }
+        }
+
+        private void MediaElement_MediaOpened(object sender, RoutedEventArgs e)
+        {
+            var mediaElement = Services.MediaPlayerService.GetMediaElement();
+            if (mediaElement != null)
+            {
+                ProgressSlider.Maximum = mediaElement.NaturalDuration.TimeSpan.TotalSeconds;
+                TotalTimeText.Text = FormatTime(mediaElement.NaturalDuration.TimeSpan);
+            }
+        }
+
+        private void UpdateProgress(object? sender, EventArgs e)
+        {
+            var mediaElement = Services.MediaPlayerService.GetMediaElement();
+            if (mediaElement != null && !_isSliderDragging)
+            {
+                ProgressSlider.Value = mediaElement.Position.TotalSeconds;
+                CurrentTimeText.Text = FormatTime(mediaElement.Position);
+            }
+        }
+
+        private string FormatTime(TimeSpan time)
+        {
+            return $"{(int)time.TotalMinutes}:{time.Seconds:D2}";
         }
 
         private void MediaPlayer_MediaEnded(object sender, RoutedEventArgs e)
@@ -55,7 +96,7 @@ namespace Tune.Frontend.Pages
                             Songs.Add(song);
                         }
                     }
-                    SongsListBox.ItemsSource = Songs;
+                    SongsItemsControl.ItemsSource = Songs;
                 }
                 else
                 {
@@ -217,6 +258,30 @@ namespace Tune.Frontend.Pages
         {
             var mainWindow = Application.Current.MainWindow as Tune.Frontend.MainWindow;
             mainWindow?.MainFrame.Navigate(new UploadPage());
+        }
+
+        private void ProgressSlider_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            _isSliderDragging = true;
+        }
+
+        private void ProgressSlider_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            _isSliderDragging = false;
+            var mediaElement = Services.MediaPlayerService.GetMediaElement();
+            if (mediaElement != null)
+            {
+                mediaElement.Position = TimeSpan.FromSeconds(ProgressSlider.Value);
+            }
+        }
+
+        private void VolumeSlider_PreviewMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            var mediaElement = Services.MediaPlayerService.GetMediaElement();
+            if (mediaElement != null)
+            {
+                mediaElement.Volume = VolumeSlider.Value / 100.0;
+            }
         }
     }
 }

@@ -73,7 +73,7 @@ namespace Tune.Frontend.Pages
                             Songs.Add(song);
                         }
                     }
-                    // MySongsListBox removed from UI
+                    MySongsListBox.ItemsSource = Songs;
                 }
                 else
                 {

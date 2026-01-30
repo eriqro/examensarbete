@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\eric.rocklind\\Documents\\examensarbete\\frontend\\Frontend.csproj": {}
+    "C:\\Users\\eric.rocklind\\Documents\\examensarbete\\Frontend\\Frontend.csproj": {}
   },
   "projects": {
-    "C:\\Users\\eric.rocklind\\Documents\\examensarbete\\frontend\\Frontend.csproj": {
+    "C:\\Users\\eric.rocklind\\Documents\\examensarbete\\Frontend\\Frontend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\eric.rocklind\\Documents\\examensarbete\\frontend\\Frontend.csproj",
+        "projectUniqueName": "C:\\Users\\eric.rocklind\\Documents\\examensarbete\\Frontend\\Frontend.csproj",
         "projectName": "Frontend",
-        "projectPath": "C:\\Users\\eric.rocklind\\Documents\\examensarbete\\frontend\\Frontend.csproj",
+        "projectPath": "C:\\Users\\eric.rocklind\\Documents\\examensarbete\\Frontend\\Frontend.csproj",
         "packagesPath": "C:\\Users\\eric.rocklind\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\eric.rocklind\\Documents\\examensarbete\\frontend\\obj\\",
+        "outputPath": "C:\\Users\\eric.rocklind\\Documents\\examensarbete\\Frontend\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

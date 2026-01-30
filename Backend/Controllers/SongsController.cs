@@ -22,7 +22,7 @@ namespace Backend.Controllers
 
         [Authorize]
         [HttpPost("upload")]
-        public async Task<IActionResult> UploadSong([FromForm] IFormFile mp3_file, [FromForm] string NameOfSong)
+        public async Task<IActionResult> UploadSong([FromForm] IFormFile mp3_file, [FromForm] string NameOfSong, [FromForm] IFormFile? thumbnail_file = null)
         {
             try
             {
@@ -42,6 +42,17 @@ namespace Backend.Controllers
                     mp3Bytes = ms.ToArray();
                 }
 
+                // Read thumbnail if provided
+                byte[]? thumbnailBytes = null;
+                if (thumbnail_file != null && thumbnail_file.Length > 0)
+                {
+                    using (var ms = new MemoryStream())
+                    {
+                        await thumbnail_file.CopyToAsync(ms);
+                        thumbnailBytes = ms.ToArray();
+                    }
+                }
+
                 // Use NAudio to get the song duration
                 double length = 0;
                 using (var mp3Stream = new MemoryStream(mp3Bytes))
@@ -55,7 +66,15 @@ namespace Backend.Controllers
                 {
                     await conn.OpenAsync();
                     var cmd = conn.CreateCommand();
-                    cmd.CommandText = "INSERT INTO songs (NameOfSong, length, creatorUserID, mp3_file) VALUES (@name, @length, @creator, @mp3)";
+                    if (thumbnailBytes != null && thumbnailBytes.Length > 0)
+                    {
+                        cmd.CommandText = "INSERT INTO songs (NameOfSong, length, creatorUserID, mp3_file, thumbnail) VALUES (@name, @length, @creator, @mp3, @thumbnail)";
+                        cmd.Parameters.AddWithValue("@thumbnail", thumbnailBytes);
+                    }
+                    else
+                    {
+                        cmd.CommandText = "INSERT INTO songs (NameOfSong, length, creatorUserID, mp3_file) VALUES (@name, @length, @creator, @mp3)";
+                    }
                     cmd.Parameters.AddWithValue("@name", NameOfSong);
                     cmd.Parameters.AddWithValue("@length", length);
                     cmd.Parameters.AddWithValue("@creator", creatorUserID);
@@ -123,7 +142,7 @@ namespace Backend.Controllers
                 {
                     await conn.OpenAsync();
                     var cmd = conn.CreateCommand();
-                    cmd.CommandText = "SELECT s.id, s.NameOfSong, s.length, u.username FROM songs s JOIN users u ON s.creatorUserID = u.userID";
+                    cmd.CommandText = "SELECT s.id, s.NameOfSong, s.length, u.username, s.thumbnail FROM songs s JOIN users u ON s.creatorUserID = u.userID";
 
                     using (var reader = await cmd.ExecuteReaderAsync())
                     {
@@ -134,7 +153,8 @@ namespace Backend.Controllers
                                 Id = reader.GetInt32(0),
                                 NameOfSong = reader.GetString(1),
                                 Length = reader.GetDouble(2),
-                                CreatorUsername = reader.GetString(3)
+                                CreatorUsername = reader.GetString(3),
+                                ThumbnailBytes = reader.IsDBNull(4) ? Array.Empty<byte>() : (byte[])reader.GetValue(4)
                             });
                         }
                     }

@@ -223,65 +223,102 @@
         </Border>
 
         <!-- Song list and controls area -->
-        <StackPanel Grid.Row="1" VerticalAlignment="Top" Margin="24,0,24,0">
-            <TextBlock Text="All Songs" Style="{StaticResource TitleTextStyle}"/>
-            <ListBox x:Name="SongsListBox" Background="Transparent" BorderThickness="0" Margin="0,12,0,0">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <Border Background="#23272F" CornerRadius="8" Padding="16" Margin="0,0,0,8">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Text="{Binding NameOfSong}" Foreground="#8AF3FF" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center"/>
-                                <TextBlock Grid.Column="1" Text="{Binding FormattedLength}" Foreground="White" FontSize="14" Opacity="0.7" VerticalAlignment="Center" Margin="12,0,12,0"/>
-                                <TextBlock Grid.Column="2" Text="{Binding CreatorUsername, StringFormat=Uploaded by {0}}" Foreground="White" FontSize="14" Opacity="0.7" VerticalAlignment="Center" Margin="0,0,12,0"/>
-                                <Button Grid.Column="3" Content="Play" Background="#4CAF50" Foreground="White" Padding="12,6" Margin="0,0,0,0" Cursor="Hand" Click="PlaySong_Click" BorderThickness="0" FontWeight="SemiBold">
-                                    <Button.Template>
-                                        <ControlTemplate TargetType="Button">
-                                            <Border Background="{TemplateBinding Background}" CornerRadius="6" Padding="{TemplateBinding Padding}">
-                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                            </Border>
-                                            <ControlTemplate.Triggers>
-                                                <Trigger Property="IsMouseOver" Value="True">
-                                                    <Setter Property="Background" Value="#45A049"/>
-                                                </Trigger>
-                                            </ControlTemplate.Triggers>
-                                        </ControlTemplate>
-                                    </Button.Template>
-                                </Button>
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-        </StackPanel>
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="24,0,24,0">
+            <StackPanel VerticalAlignment="Top">
+                <TextBlock Text="Songs" Style="{StaticResource TitleTextStyle}"/>
+                <ItemsControl x:Name="SongsItemsControl" Margin="0,12,0,0">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Background="#23272F" CornerRadius="8" Padding="12" Margin="0,0,12,12" Width="180">
+                                <StackPanel>
+                                    <!-- Thumbnail Image -->
+                                    <Border Width="156" Height="156" CornerRadius="4" Margin="0,0,0,10" ClipToBounds="True">
+                                        <Image Source="{Binding ThumbnailImage}" Stretch="UniformToFill"/>
+                                    </Border>
+                                    
+                                    <!-- Song Info -->
+                                    <TextBlock Text="{Binding NameOfSong}" Foreground="#8AF3FF" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,2" TextTrimming="CharacterEllipsis" Height="32"/>
+                                    <TextBlock Text="{Binding CreatorUsername, StringFormat=By {0}}" Foreground="White" FontSize="10" Opacity="0.7" Margin="0,0,0,6" TextTrimming="CharacterEllipsis"/>
+                                    
+                                    <!-- Duration and Play Button -->
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{Binding FormattedLength}" Foreground="White" FontSize="11" Opacity="0.7" VerticalAlignment="Center"/>
+                                        <Button Grid.Column="1" Content="▶" Background="#4CAF50" Foreground="White" Padding="8,4" Cursor="Hand" Click="PlaySong_Click" BorderThickness="0" FontWeight="SemiBold" FontSize="10">
+                                            <Button.Template>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border Background="{TemplateBinding Background}" CornerRadius="4" Padding="{TemplateBinding Padding}">
+                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter Property="Background" Value="#45A049"/>
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Button.Template>
+                                        </Button>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </ScrollViewer> 
 
         <!-- FOOTER (Music Controls) -->
-        <Border Grid.Row="2" Height="100" CornerRadius="6,6,0,0" Margin="0,0,0,0" Padding="16,12" Background="#23272F" BorderBrush="#404040" BorderThickness="1,1,0,0">
+        <Border Grid.Row="2" Height="100" CornerRadius="6,6,0,0" Margin="0,0,0,0" Padding="20,10,20,10" Background="#1A1F26" BorderBrush="#2A3038" BorderThickness="1,1,0,0">
             <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="120"/>
+                </Grid.ColumnDefinitions>
                 
-                <!-- Now Playing Text -->
-                <TextBlock x:Name="NowPlayingText" Grid.Row="0" Foreground="#8AF3FF" FontSize="13" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,0,0,8" TextTrimming="CharacterEllipsis"/>
+                <!-- Left: Now Playing Text (Small) -->
+                <TextBlock x:Name="NowPlayingText" VerticalAlignment="Center" Foreground="#6FA3FF" FontSize="9" FontWeight="Normal" TextTrimming="CharacterEllipsis" Opacity="0.9"/>
                 
-                <!-- Player Controls -->
-                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <Button x:Name="PreviousButton" Style="{StaticResource FooterMusicButtonStyle}" Click="PreviousButton_Click" ToolTip="Previous" Margin="4,0">
-                        <Image Source="../imgs/goback.png" Stretch="Uniform" Width="28" Height="28"/>
-                    </Button>
-                    <Button x:Name="PlayPauseButton" Style="{StaticResource FooterMusicButtonStyle}" Click="PlayPauseButton_Click" ToolTip="Play/Pause" Margin="4,0">
-                        <Image x:Name="FooterPlayPauseImage" Source="../imgs/play.png" Stretch="Uniform" Width="28" Height="28"/>
-                    </Button>
-                    <Button x:Name="NextButton" Style="{StaticResource FooterMusicButtonStyle}" Click="NextButton_Click" ToolTip="Next" Margin="4,0">
-                        <Image Source="../imgs/skip.png" Stretch="Uniform" Width="28" Height="28"/>
-                    </Button>
+                <!-- Center: Progress Slider + Time -->
+                <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="20,0">
+                    <Grid Margin="0,0,0,6">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <TextBlock x:Name="CurrentTimeText" Text="0:00" Foreground="#8AF3FF" FontSize="10" FontWeight="Bold" VerticalAlignment="Center"/>
+                        <Slider x:Name="ProgressSlider" Grid.Column="1" VerticalAlignment="Center" Height="6" Margin="8,0" PreviewMouseLeftButtonDown="ProgressSlider_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="ProgressSlider_PreviewMouseLeftButtonUp" Minimum="0" Maximum="100" Foreground="#6FA3FF" Background="#2A3038"/>
+                        <TextBlock x:Name="TotalTimeText" Text="0:00" Foreground="#8AF3FF" FontSize="10" FontWeight="Bold" VerticalAlignment="Center" Grid.Column="2"/>
+                    </Grid>
+                    
+                    <!-- Play/Pause Buttons -->
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Button x:Name="PreviousButton" Style="{StaticResource FooterMusicButtonStyle}" Click="PreviousButton_Click" ToolTip="Previous" Margin="0,0,6,0">
+                            <Image Source="../imgs/goback.png" Stretch="Uniform" Width="24" Height="24"/>
+                        </Button>
+                        <Button x:Name="PlayPauseButton" Style="{StaticResource FooterMusicButtonStyle}" Click="PlayPauseButton_Click" ToolTip="Play/Pause" Margin="6,0">
+                            <Image x:Name="FooterPlayPauseImage" Source="../imgs/play.png" Stretch="Uniform" Width="24" Height="24"/>
+                        </Button>
+                        <Button x:Name="NextButton" Style="{StaticResource FooterMusicButtonStyle}" Click="NextButton_Click" ToolTip="Next" Margin="6,0,0,0">
+                            <Image Source="../imgs/skip.png" Stretch="Uniform" Width="24" Height="24"/>
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+                
+                <!-- Right: Volume Control -->
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
+                    <TextBlock Text="🔊" Foreground="#6FA3FF" FontSize="12" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                    <Slider x:Name="VolumeSlider" Width="70" VerticalAlignment="Center" Height="6" Minimum="0" Maximum="100" Value="50" PreviewMouseUp="VolumeSlider_PreviewMouseUp" Foreground="#6FA3FF" Background="#2A3038"/>
                 </StackPanel>
             </Grid>
         </Border>

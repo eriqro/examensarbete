@@ -8,5 +8,6 @@ namespace Backend.Models
         public double Length { get; set; }
         public byte[] Mp3Bytes { get; set; }
         public DateTime UploadedAt { get; set; }
+        public byte[] ThumbnailBytes { get; set; } = Array.Empty<byte>();
     }
 }
