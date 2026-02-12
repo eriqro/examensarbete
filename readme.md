@@ -1,74 +1,67 @@
-# **TUNE – MUSIC PLAYER**
----
+# TUNE - Music Player
 
-## **BESKRIVNING**
+## Kort beskrivning
+Tune är ett musikhanteringssystem där du kan ladda upp, lagra, spela upp och dela egna ljudfiler, även sånt som inte finns på stora streamingplattformar. Projektet består av en WPF-klient och ett ASP.NET Core API.
 
-Tune är ett musikhanteringssystem som låter användare ladda upp, lagra, spela upp och dela sina egna ljudfiler även sådana som inte finns på större streamingplattformar  
+## Projektstruktur (kort)
+- Backend: ASP.NET Core API med `SongsController` och modellen `Song`.
+- Frontend: WPF med sidorna `LoginPage`, `SignUpPage`, `MainPage`, `ProfilePage`, `UploadPage`.
+- Tjänster: `ApiClient` för API-anrop och `MediaPlayerService` för uppspelning.
 
-Målet är att skapa en webbaserad tjänst eller mjukvara där användare kan synka sin musik mellan flera enheter och även dela låtar med andra
+## Produktmål
+- Ladda upp egna ljudfiler och hantera metadata.
+- Spela upp musik med en enkel, tydlig spelare.
+- Synka biblioteket mellan flera enheter via API.
 
----
+## MVP
+- Uppladdning av lokala musikfiler.
+- Lista över uppladdade filer med grundläggande metadata.
+- Enkel musikspelare med play/pause, tidslinje och hopp i låt.
+- Konto och inloggning med användarnamn/e-post och lösenord.
+- Grundläggande synkning mellan enheter.
 
-## **PROJEKTBESKRIVNING**
+## Användarresa (kort)
+1. Skapa konto och logga in.
+2. Ladda upp ljudfiler från enheten.
+3. Se biblioteket på `MainPage` och spela upp musik.
+4. Hantera egna låtar på `ProfilePage` (lista, spela, radera).
+5. Logga in på ny enhet och få samma bibliotek.
 
-### **PRODUKTMÅL**
+## Flödesschema
+```mermaid
+flowchart TD
+    A["Användare"] --> B["Frontend (WPF)"];
+    B --> C{"Inloggad?"};
+    C -- "Nej" --> D["LoginPage / SignUpPage"];
+    D --> E["Backend API"];
+    E --> F[("Databas")];
+    E --> G["JWT Token"];
+    G --> B;
+    C -- "Ja" --> H["MainPage - Musikbibliotek"];
+    H --> I["UploadPage - Ladda upp fil"];
+    I --> E;
+    H --> J["Spela upp låt"];
+    J --> K["MediaPlayerService"];
+    H --> L["ProfilePage - Mina låtar"];
+    L --> E;
+    E --> F;
+    B --> M["Synka bibliotek"];
+    M --> E;
+```
 
-Målet med Tune är att skapa ett system där användare kan ladda upp egna ljudfiler, lagra och spela upp musik, synka filer mellan olika enheter och dela musik med andra användare
+## Tekniköversikt
+- Backend: ASP.NET Core API (.NET 9)
+- Frontend: WPF (.NET 9)
+- Auth: JWT
+- Kommunikation: REST
 
----
+## Authentication (JWT)
+- Backend endpoints: `POST /auth/register`, `POST /auth/login`, `GET /auth/me` (protected).
+- Konfiguration: `Jwt` i `Backend/appsettings.Development.Local.json` (ersätt `REPLACE_THIS_WITH_A_STRONG_RANDOM_SECRET`).
+- Frontend: `LoginPage` och `SignUpPage` anropar backend. `BackendApiBaseUrl` i `Frontend/AppConfig/appsettings.Development.Local.json` (default `http://localhost:5000`).
+- Tokens lagras i minnet och bifogas automatiskt via `Frontend/Services/ApiClient.cs`.
 
-### **MVP (MINIMUM VIABLE PRODUCT)**
+## Andra endpoints
+- `GET /users` (listar användare).
+- `GET /songs` (hämtar alla låtar via minimal API).
 
-#### **Uppladdning av Lokala Musikfiler**
-Användaren ska kunna välja och ladda upp ljudfiler från sin enhet
-
-#### **Lista över Uppladdade Filer**
-En lista som visar filnamn, längd och grundläggande metadata
-
-#### **Enkel Musikspelare**
-Användaren kan spela och pausa musik, använda tidslinje och progress bar samt hoppa i låten
-
-#### **Konto och Inloggning**
-Användaren har konto med användarnamn och lösenord samt tvåfaktorsautentisering 2FA
-
-#### **Grundläggande Filsynkning**
-Användarens filer ska kunna nås från flera enheter kopplade till samma konto
-
----
-
-## **ANVÄNDARUPPLEVELSE**
-
-### **Konto och Inloggning**
-Användaren skapar ett konto med e-post och lösenord, loggar in genom 2FA och kommer direkt till musikbiblioteket
-
-### **Ladda Upp Musik**
-Användaren laddar upp ljudfiler från sin enhet och filerna visas direkt i biblioteket med titel, längd och datum
-
-### **Publicera Musik till Andra**
-Användaren kan välja att publicera en låt så att andra användare kan se och spela upp den
-
-### **Spela Musik**
-Användaren kan spela och pausa, hoppa i låten, justera volym och se aktuell tidsposition
-
-### **Synka Mellan Enheter**
-Vid inloggning på en annan enhet blir alla filer tillgängliga direkt och musikspelaren fungerar likadant på alla enheter
-
----
-
-## **TEKNISKA LÖSNINGAR**
-
-Här kan diagram, arkitekturbeskrivning och teknikstack läggas till senare
-
-
-## Authentication (JWT token)
-
-- Backend: added endpoints `POST /auth/register`, `POST /auth/login`, and protected `GET /auth/me`.
-- Configure JWT by setting `Jwt` section in `Backend/appsettings.Development.Local.json` (replace `REPLACE_THIS_WITH_A_STRONG_RANDOM_SECRET`).
-- The backend issues a JWT access token on successful register/login.
-
-- Frontend: `LoginPage` and `SignUpPage` now call the backend endpoints. Set `BackendApiBaseUrl` in `Frontend/AppConfig/appsettings.Development.Local.json` (default `http://localhost:5000`).
-- Tokens are stored in-memory and automatically attached to API requests via `Frontend/Services/ApiClient.cs`.
-
-Notes:
-- For production, set `RequireHttpsMetadata = true` in JWT bearer options and store secrets securely (environment variables or secret store).
-- Consider adding refresh tokens for long-lived sessions and persistent secure storage for tokens (Windows DPAPI, credential manager, or a secure vault).
