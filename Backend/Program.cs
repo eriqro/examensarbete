@@ -8,28 +8,23 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 
-// Set up the web app builder
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-// Pull in local dev settings (won't exist in production, that's fine)
 builder.Configuration.AddJsonFile(
     "appsettings.Development.Local.json",
     optional: true,
     reloadOnChange: true
 );
 
-// Wire up database connection
 builder.Services.AddTransient<MySqlConnection>(_ =>
     new MySqlConnection(builder.Configuration.GetConnectionString("MariaDB")!)
 );
 
-// Enable Swagger for API testing
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// JWT authentication setup
 var jwtSection = builder.Configuration.GetSection("Jwt");
 var jwtKey = jwtSection.GetValue<string>("Key")!;
 var jwtIssuer = jwtSection.GetValue<string>("Issuer");
@@ -42,7 +37,7 @@ builder.Services.AddAuthentication(options =>
 })
     .AddJwtBearer(options =>
     {
-        options.RequireHttpsMetadata = false; // Turn this on for production
+        options.RequireHttpsMetadata = false;
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
@@ -58,7 +53,6 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization();
 
-// Allow frontend to call our API
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
@@ -71,14 +65,12 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Swagger is dev-only
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-// Quick sanity check endpoint
 app.MapGet("/", () => "Backend is running!");
 
 app.UseCors();
@@ -88,7 +80,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// Builds JWT tokens for logged in users
 string GenerateJwtToken(int userId, string username)
 {
     var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
@@ -111,7 +102,6 @@ string GenerateJwtToken(int userId, string username)
     return new JwtSecurityTokenHandler().WriteToken(token);
 }
 
-// Create new account
 app.MapPost("/auth/register", async (MySqlConnection conn, RegisterRequest req) =>
 {
     if (string.IsNullOrWhiteSpace(req.Username) || string.IsNullOrWhiteSpace(req.Password) || string.IsNullOrWhiteSpace(req.Email))
@@ -119,7 +109,6 @@ app.MapPost("/auth/register", async (MySqlConnection conn, RegisterRequest req) 
 
     await conn.OpenAsync();
 
-    // See if username or email already exists
     using (var check = new MySqlCommand("SELECT COUNT(*) FROM users WHERE username = @u OR email = @e", conn))
     {
         check.Parameters.AddWithValue("@u", req.Username);
@@ -144,7 +133,6 @@ app.MapPost("/auth/register", async (MySqlConnection conn, RegisterRequest req) 
     }
 });
 
-// Login existing user
 app.MapPost("/auth/login", async (MySqlConnection conn, LoginRequest req) =>
 {
     await conn.OpenAsync();
@@ -166,7 +154,6 @@ app.MapPost("/auth/login", async (MySqlConnection conn, LoginRequest req) =>
     return Results.Ok(new { token, userId = id, username });
 });
 
-// Get current logged in user info
 app.MapGet("/auth/me", async (HttpContext http, MySqlConnection conn) =>
 {
     var userIdClaim = http.User.FindFirst(JwtRegisteredClaimNames.Sub);
@@ -186,7 +173,6 @@ app.MapGet("/auth/me", async (HttpContext http, MySqlConnection conn) =>
     return Results.Ok(new { userID = reader.GetInt32("userID"), username = reader.GetString("username"), email = reader.GetString("email") });
 }).RequireAuthorization();
 
-// List all users (probably for admin purposes)
 app.MapGet("/users", async (MySqlConnection conn) =>
 {
     await conn.OpenAsync();
@@ -207,9 +193,6 @@ app.MapGet("/users", async (MySqlConnection conn) =>
 
     return users;
 });
-
-
-// Fetch all songs from the database
 
 app.MapGet("/songs", async (MySqlConnection conn) =>
 {
@@ -239,6 +222,5 @@ app.MapGet("/songs", async (MySqlConnection conn) =>
 
 app.Run();
 
-// Data transfer objects for API
 public record RegisterRequest(string Username, string Email, string Password);
 public record LoginRequest(string UsernameOrEmail, string Password);

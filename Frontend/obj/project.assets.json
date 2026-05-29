@@ -845,11 +845,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\eric.rocklind\\Documents\\examensarbete\\Frontend\\Frontend.csproj",
+      "projectUniqueName": "c:\\Users\\eric.rocklind\\Documents\\examensarbete\\Frontend\\Frontend.csproj",
       "projectName": "Frontend",
-      "projectPath": "C:\\Users\\eric.rocklind\\Documents\\examensarbete\\Frontend\\Frontend.csproj",
+      "projectPath": "c:\\Users\\eric.rocklind\\Documents\\examensarbete\\Frontend\\Frontend.csproj",
       "packagesPath": "C:\\Users\\eric.rocklind\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\eric.rocklind\\Documents\\examensarbete\\Frontend\\obj\\",
+      "outputPath": "c:\\Users\\eric.rocklind\\Documents\\examensarbete\\Frontend\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

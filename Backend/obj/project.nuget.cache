@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "rMPz+HlXYoY=",
+  "dgSpecHash": "HszwEvASTUU=",
   "success": true,
-  "projectFilePath": "C:\\Users\\eric.rocklind\\Documents\\examensarbete\\backend\\Backend.csproj",
+  "projectFilePath": "c:\\Users\\eric.rocklind\\Documents\\examensarbete\\Backend\\Backend.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\eric.rocklind\\.nuget\\packages\\bcrypt.net-next\\4.0.2\\bcrypt.net-next.4.0.2.nupkg.sha512",
     "C:\\Users\\eric.rocklind\\.nuget\\packages\\bouncycastle.cryptography\\2.6.2\\bouncycastle.cryptography.2.6.2.nupkg.sha512",
@@ -21,6 +21,7 @@
     "C:\\Users\\eric.rocklind\\.nuget\\packages\\microsoft.identitymodel.protocols\\7.0.3\\microsoft.identitymodel.protocols.7.0.3.nupkg.sha512",
     "C:\\Users\\eric.rocklind\\.nuget\\packages\\microsoft.identitymodel.protocols.openidconnect\\7.0.3\\microsoft.identitymodel.protocols.openidconnect.7.0.3.nupkg.sha512",
     "C:\\Users\\eric.rocklind\\.nuget\\packages\\microsoft.identitymodel.tokens\\7.0.3\\microsoft.identitymodel.tokens.7.0.3.nupkg.sha512",
+    "C:\\Users\\eric.rocklind\\.nuget\\packages\\microsoft.net.illink.tasks\\9.0.16\\microsoft.net.illink.tasks.9.0.16.nupkg.sha512",
     "C:\\Users\\eric.rocklind\\.nuget\\packages\\microsoft.netcore.platforms\\3.1.0\\microsoft.netcore.platforms.3.1.0.nupkg.sha512",
     "C:\\Users\\eric.rocklind\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512",
     "C:\\Users\\eric.rocklind\\.nuget\\packages\\microsoft.win32.registry\\4.7.0\\microsoft.win32.registry.4.7.0.nupkg.sha512",
@@ -45,19 +46,23 @@
     "C:\\Users\\eric.rocklind\\.nuget\\packages\\system.security.permissions\\8.0.0\\system.security.permissions.8.0.0.nupkg.sha512",
     "C:\\Users\\eric.rocklind\\.nuget\\packages\\system.security.principal.windows\\4.7.0\\system.security.principal.windows.4.7.0.nupkg.sha512",
     "C:\\Users\\eric.rocklind\\.nuget\\packages\\system.windows.extensions\\8.0.0\\system.windows.extensions.8.0.0.nupkg.sha512",
-    "C:\\Users\\eric.rocklind\\.nuget\\packages\\zstdsharp.port\\0.8.6\\zstdsharp.port.0.8.6.nupkg.sha512"
+    "C:\\Users\\eric.rocklind\\.nuget\\packages\\zstdsharp.port\\0.8.6\\zstdsharp.port.0.8.6.nupkg.sha512",
+    "C:\\Users\\eric.rocklind\\.nuget\\packages\\microsoft.netcore.app.runtime.win-x64\\9.0.16\\microsoft.netcore.app.runtime.win-x64.9.0.16.nupkg.sha512",
+    "C:\\Users\\eric.rocklind\\.nuget\\packages\\microsoft.windowsdesktop.app.runtime.win-x64\\9.0.16\\microsoft.windowsdesktop.app.runtime.win-x64.9.0.16.nupkg.sha512",
+    "C:\\Users\\eric.rocklind\\.nuget\\packages\\microsoft.aspnetcore.app.runtime.win-x64\\9.0.16\\microsoft.aspnetcore.app.runtime.win-x64.9.0.16.nupkg.sha512"
   ],
   "logs": [
     {
       "code": "NU1902",
       "level": "Warning",
       "message": "Package 'System.IdentityModel.Tokens.Jwt' 7.0.3 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-59j7-ghrg-fj52",
-      "projectPath": "C:\\Users\\eric.rocklind\\Documents\\examensarbete\\backend\\Backend.csproj",
+      "projectPath": "c:\\Users\\eric.rocklind\\Documents\\examensarbete\\Backend\\Backend.csproj",
       "warningLevel": 1,
-      "filePath": "C:\\Users\\eric.rocklind\\Documents\\examensarbete\\backend\\Backend.csproj",
+      "filePath": "c:\\Users\\eric.rocklind\\Documents\\examensarbete\\Backend\\Backend.csproj",
       "libraryId": "System.IdentityModel.Tokens.Jwt",
       "targetGraphs": [
-        "net9.0"
+        "net9.0",
+        "net9.0/win-x64"
       ]
     }
   ]

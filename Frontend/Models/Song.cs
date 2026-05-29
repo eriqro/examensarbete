@@ -14,7 +14,6 @@ namespace Tune.Frontend.Models
         public byte[] Mp3Bytes { get; set; } = Array.Empty<byte>();
         public DateTime UploadedAt { get; set; }
 
-        // Convenience property for UI display
         public string FormattedLength => TimeSpan.FromSeconds(Length).ToString(@"m\:ss");
 
         public byte[] ThumbnailBytes {get;set;} = Array.Empty<byte>(); 

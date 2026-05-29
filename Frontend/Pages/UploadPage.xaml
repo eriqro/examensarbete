@@ -5,7 +5,6 @@
     Background="#2E2E2E">
 
   <Page.Resources>
-    <!-- Copy styles from MainPage for header/footer consistency -->
     <Style x:Key="FooterMusicButtonStyle" TargetType="Button">
       <Setter Property="Background" Value="#23272F"/>
       <Setter Property="BorderBrush" Value="transparent"/>
@@ -157,7 +156,6 @@
       <RowDefinition Height="Auto"/>
     </Grid.RowDefinitions>
 
-    <!-- HEADER -->
     <Border Grid.Row="0" Height="88" CornerRadius="0,0,6,6" Margin="0,0,0,0" Padding="0" Background="#23272F">
       <Grid>
         <Grid.ColumnDefinitions>
@@ -166,7 +164,7 @@
           <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <Button Style="{StaticResource HeaderButtons}" Click="LogoButton_Click">
-          <Image Source="../imgs/Logo.png" Stretch="Uniform" Width="28" Height="28"/>
+          <Image Source="/imgs/logo.ico" Stretch="Uniform" Width="28" Height="28"/>
         </Button>
         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="1" Margin="24,0,0,0">
           <Button Style="{StaticResource HeaderButtons}" Click="UploadButton_Click">
@@ -177,7 +175,6 @@
           <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
             <TextBlock Text="Logged in as: " Foreground="#8AF3FF" FontWeight="Bold" FontSize="16" VerticalAlignment="Center"/>
             <TextBlock x:Name="UsernameDisplay" Foreground="White" FontWeight="SemiBold" FontSize="16" VerticalAlignment="Center" Margin="8,0,0,0"/>
-            <!-- Profile Button -->
             <Button x:Name="ProfileMenuButton" Width="28" Height="28" Margin="10,0,0,0" Padding="0" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Cursor="Hand" Click="ProfileMenuButton_Click">
               <Button.Template>
                 <ControlTemplate TargetType="Button">
@@ -192,7 +189,6 @@
                 </Canvas>
               </Viewbox>
             </Button>
-            <!-- Dropdown Popup -->
             <Popup x:Name="ProfileMenuPopup" PlacementTarget="{Binding ElementName=ProfileMenuButton}" Placement="Bottom" StaysOpen="False" AllowsTransparency="True" PopupAnimation="Fade">
               <Border Background="#23272F" CornerRadius="8" Padding="16" SnapsToDevicePixels="True" MinWidth="160">
                 <StackPanel>
@@ -206,7 +202,6 @@
       </Grid>
     </Border>
 
-    <!-- MAIN CONTENT -->
     <StackPanel Grid.Row="1" VerticalAlignment="Top">
       <TextBlock Text="Upload Page" Style="{StaticResource TitleTextStyle}"/>
       <Grid>
@@ -216,43 +211,38 @@
           <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- Song Name -->
         <StackPanel Grid.Row="0" HorizontalAlignment="Center" Margin="0,0,0,10">
           <TextBlock Text="Name Of Song" FontSize="14" Margin="0,0,0,2" Foreground="White"/>
           <TextBox Name="SongName" Width="220" Padding="6" Background="#23272F" Foreground="White" BorderBrush="#8AF3FF" BorderThickness="1"/>
         </StackPanel>
 
-        <!-- Upload Section -->
         <Grid Grid.Row="1" HorizontalAlignment="Center" Margin="0,0,0,10">
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="16"/>
             <ColumnDefinition Width="Auto"/>
           </Grid.ColumnDefinitions>
-          <!-- Thumbnail -->
           <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,16,0">
             <Border Width="80" Height="80" Background="#23272F" CornerRadius="8" BorderBrush="#8AF3FF" BorderThickness="2" VerticalAlignment="Center">
               <Image x:Name="ThumbnailPreview" Stretch="UniformToFill" />
             </Border>
             <Button Content="Upload Thumbnail" Width="80" Margin="0,8,0,0" Click="UploadThumbnail_Click" Style="{StaticResource PopupButtonStyle}"/>
           </StackPanel>
-          <!-- Vertical Separator -->
           <Border Grid.Column="1" Width="2" Background="#8AF3FF" VerticalAlignment="Stretch" Margin="0,0,0,0"/>
-          <!-- File Upload -->
+          
+          
           <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
             <TextBox x:Name="FilePathTextBox" IsReadOnly="True" Width="180" Margin="0,0,10,0" Padding="6" Background="#23272F" Foreground="White" BorderBrush="#8AF3FF" BorderThickness="1"/>
             <Button Content="Browse File" Width="120" Click="BrowseFile_Click" Style="{StaticResource PopupButtonStyle}"/>
           </StackPanel>
         </Grid>
 
-        <!-- Upload Button -->
         <StackPanel Grid.Row="2" HorizontalAlignment="Center">
           <Button Content="Upload Song" Width="120" Click="UploadSong_Click" Style="{StaticResource PopupButtonStyle}"/>
         </StackPanel>
         </Grid>
     </StackPanel>
 
-    <!-- FOOTER (Music Controls) -->
     <Border Grid.Row="2" Height="64" CornerRadius="6,6,0,0" Margin="0,0,0,0" Padding="0" Background="#23272F">
     </Border>
   </Grid>

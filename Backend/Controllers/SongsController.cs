@@ -29,12 +29,11 @@ namespace Backend.Controllers
                 if (mp3_file == null || mp3_file.Length == 0)
                     return BadRequest("No file uploaded.");
 
-                // Grab user ID from token so we know who owns this song
                 var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier) ?? User.FindFirst(ClaimTypes.Name);
                 if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int creatorUserID))
                     return Unauthorized("User ID not found in token.");
 
-                // Read file into byte array
+                
                 byte[] mp3Bytes;
                 using (var ms = new MemoryStream())
                 {
@@ -42,7 +41,7 @@ namespace Backend.Controllers
                     mp3Bytes = ms.ToArray();
                 }
 
-                // Read thumbnail if provided
+                
                 byte[]? thumbnailBytes = null;
                 if (thumbnail_file != null && thumbnail_file.Length > 0)
                 {
@@ -53,7 +52,7 @@ namespace Backend.Controllers
                     }
                 }
 
-                // Use NAudio to get the song duration
+                
                 double length = 0;
                 using (var mp3Stream = new MemoryStream(mp3Bytes))
                 using (var reader = new Mp3FileReader(mp3Stream))
@@ -61,7 +60,7 @@ namespace Backend.Controllers
                     length = reader.TotalTime.TotalSeconds;
                 }
 
-                // Store song in database with file data
+                
                 using (var conn = new MySqlConnection(_connectionString))
                 {
                     await conn.OpenAsync();
@@ -96,7 +95,6 @@ namespace Backend.Controllers
         {
             try
             {
-                // Figure out which user is requesting their library
                 var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier) ?? User.FindFirst(ClaimTypes.Name);
                 if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int creatorUserID))
                     return Unauthorized("User ID not found in token.");
@@ -174,7 +172,6 @@ namespace Backend.Controllers
         {
             try
             {
-                // Verify they own the song before deleting
                 var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier) ?? User.FindFirst(ClaimTypes.Name);
                 if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int creatorUserID))
                     return Unauthorized("User ID not found in token.");
@@ -183,7 +180,6 @@ namespace Backend.Controllers
                 {
                     await conn.OpenAsync();
                     var cmd = conn.CreateCommand();
-                    // This only works if the song belongs to them
                     cmd.CommandText = "DELETE FROM songs WHERE id = @id AND creatorUserID = @userId";
                     cmd.Parameters.AddWithValue("@id", id);
                     cmd.Parameters.AddWithValue("@userId", creatorUserID);

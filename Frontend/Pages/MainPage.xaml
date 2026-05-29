@@ -6,7 +6,7 @@
 
     <Page.Resources>
 
-                <!-- Styling for playback controls -->
+                
                 <Style x:Key="FooterMusicButtonStyle" TargetType="Button">
                     <Setter Property="Background" Value="#23272F"/>
                     <Setter Property="BorderBrush" Value="transparent"/>
@@ -41,16 +41,15 @@
                         </Setter.Value>
                     </Setter>
                 </Style>
-        <!-- Large text at the top -->
+        
         <Style x:Key="TitleTextStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="28"/>
             <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="Foreground" Value="#8AF3FF"/>
-            <Setter Property="HorizontalAlignment" Value="Center"/>
             <Setter Property="Margin" Value="0,24,0,12"/>
         </Style>
 
-        <!-- Smaller descriptive text -->
+        
         <Style x:Key="InfoTextStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="18"/>
             <Setter Property="Foreground" Value="White"/>
@@ -95,7 +94,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <!-- Buttons inside dropdown menus -->
+        
         <Style x:Key="PopupButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderBrush" Value="Transparent"/>
@@ -148,19 +147,19 @@
             </Setter>
         </Style>
 
-        <!-- Shadow effect for depth -->
+        
         <DropShadowEffect x:Key="DropShadowEffect" BlurRadius="12" ShadowDepth="0" Color="#80000000" Opacity="0.25"/>
     </Page.Resources>
 
     <Grid>
-        <!-- Layout: header, content, footer -->
+        
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/> <!-- Header -->
-            <RowDefinition Height="*"/>    <!-- Main Content -->
-            <RowDefinition Height="Auto"/> <!-- Footer -->
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- Top navigation bar -->
+        
         <Border Grid.Row="0" Height="88" CornerRadius="0,0,6,6" Margin="0,0,0,0" Padding="0" Background="#23272F">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -169,7 +168,7 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <Button Style="{StaticResource HeaderButtons}" Click="LogoButton_Click">
-                    <Image Source="../imgs/Logo.png" Stretch="Uniform" Width="28" Height="28"/>
+                    <Image Source="/imgs/logo.ico" Stretch="Uniform" Width="28" Height="28"/>
                 </Button>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="1" Margin="24,0,0,0">
                     <Button Style="{StaticResource HeaderButtons}" Click="UploadButton_Click">
@@ -180,7 +179,7 @@
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <TextBlock Text="Logged in as: " Foreground="#8AF3FF" FontWeight="Bold" FontSize="16" VerticalAlignment="Center"/>
                         <TextBlock x:Name="UsernameDisplay" Foreground="White" FontWeight="SemiBold" FontSize="16" VerticalAlignment="Center" Margin="8,0,0,0"/>
-                        <!-- User icon button -->
+                        
                         <Button x:Name="ProfileMenuButton"
                                 Width="28" Height="28"
                                 Margin="10,0,0,0"
@@ -203,7 +202,7 @@
                                 </Canvas>
                             </Viewbox>
                         </Button>
-                        <!-- Menu that pops up when clicking profile -->
+                        
                         <Popup x:Name="ProfileMenuPopup"
                                PlacementTarget="{Binding ElementName=ProfileMenuButton}"
                                Placement="Bottom"
@@ -222,7 +221,6 @@
             </Grid>
         </Border>
 
-        <!-- Song list and controls area -->
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="24,0,24,0">
             <StackPanel VerticalAlignment="Top">
                 <TextBlock Text="Songs" Style="{StaticResource TitleTextStyle}"/>
@@ -236,16 +234,16 @@
                         <DataTemplate>
                             <Border Background="#23272F" CornerRadius="8" Padding="12" Margin="0,0,12,12" Width="180">
                                 <StackPanel>
-                                    <!-- Thumbnail Image -->
+                                    
                                     <Border Width="156" Height="156" CornerRadius="4" Margin="0,0,0,10" ClipToBounds="True">
                                         <Image Source="{Binding ThumbnailImage}" Stretch="UniformToFill"/>
                                     </Border>
                                     
-                                    <!-- Song Info -->
+                                    
                                     <TextBlock Text="{Binding NameOfSong}" Foreground="#8AF3FF" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,2" TextTrimming="CharacterEllipsis" Height="32"/>
                                     <TextBlock Text="{Binding CreatorUsername, StringFormat=By {0}}" Foreground="White" FontSize="10" Opacity="0.7" Margin="0,0,0,6" TextTrimming="CharacterEllipsis"/>
                                     
-                                    <!-- Duration and Play Button -->
+                                    
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"/>
@@ -275,7 +273,7 @@
             </StackPanel>
         </ScrollViewer> 
 
-        <!-- FOOTER (Music Controls) -->
+        
         <Border Grid.Row="2" Height="100" CornerRadius="6,6,0,0" Margin="0,0,0,0" Padding="20,10,20,10" Background="#1A1F26" BorderBrush="#2A3038" BorderThickness="1,1,0,0">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -284,10 +282,10 @@
                     <ColumnDefinition Width="120"/>
                 </Grid.ColumnDefinitions>
                 
-                <!-- Left: Now Playing Text (Small) -->
+                
                 <TextBlock x:Name="NowPlayingText" VerticalAlignment="Center" Foreground="#6FA3FF" FontSize="9" FontWeight="Normal" TextTrimming="CharacterEllipsis" Opacity="0.9"/>
                 
-                <!-- Center: Progress Slider + Time -->
+                
                 <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="20,0">
                     <Grid Margin="0,0,0,6">
                         <Grid.ColumnDefinitions>
@@ -301,7 +299,7 @@
                         <TextBlock x:Name="TotalTimeText" Text="0:00" Foreground="#8AF3FF" FontSize="10" FontWeight="Bold" VerticalAlignment="Center" Grid.Column="2"/>
                     </Grid>
                     
-                    <!-- Play/Pause Buttons -->
+                    
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <Button x:Name="PreviousButton" Style="{StaticResource FooterMusicButtonStyle}" Click="PreviousButton_Click" ToolTip="Previous" Margin="0,0,6,0">
                             <Image Source="../imgs/goback.png" Stretch="Uniform" Width="24" Height="24"/>
@@ -315,7 +313,7 @@
                     </StackPanel>
                 </StackPanel>
                 
-                <!-- Right: Volume Control -->
+                
                 <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
                     <TextBlock Text="🔊" Foreground="#6FA3FF" FontSize="12" VerticalAlignment="Center" Margin="0,0,6,0"/>
                     <Slider x:Name="VolumeSlider" Width="70" VerticalAlignment="Center" Height="6" Minimum="0" Maximum="100" Value="50" PreviewMouseUp="VolumeSlider_PreviewMouseUp" Foreground="#6FA3FF" Background="#2A3038"/>

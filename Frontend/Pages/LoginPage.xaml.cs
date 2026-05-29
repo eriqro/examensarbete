@@ -29,7 +29,6 @@ namespace Tune.Frontend.Pages
             string password = PasswordBox.Password;
             string usernameOrEmail = UsernameBox.Text;
 
-            // Set up the API URL
             var baseUrl = AppConfig.GetBackendBaseUrl();
             Tune.Frontend.Services.ApiClient.SetBaseUrl(baseUrl);
 
@@ -65,7 +64,6 @@ namespace Tune.Frontend.Pages
             }
         }
 
-        // Display a message to the user at the top
         private void ShowNotification(string message, bool isError)
         {
             NotificationText.Text = message;

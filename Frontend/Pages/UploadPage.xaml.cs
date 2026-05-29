@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Win32; 
 using System.IO;                     
-using System.Net.Http; // For MultipartFormDataContent, StringContent, ByteArrayContent
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Net.Http.Json;
 using Tune.Frontend.Helpers;
@@ -22,7 +22,7 @@ namespace Tune.Frontend.Pages
         }
         private async void UploadSong_Click(object sender, RoutedEventArgs e)
         {
-            // Make sure they filled in both fields
+            
             string songName = SongName.Text;
             string filePath = FilePathTextBox.Text;
             if (string.IsNullOrWhiteSpace(songName) || string.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath))
@@ -31,7 +31,6 @@ namespace Tune.Frontend.Pages
                 return;
             }
 
-            // Point the API client at the backend
             var baseUrl = AppConfig.GetBackendBaseUrl();
             Tune.Frontend.Services.ApiClient.SetBaseUrl(baseUrl);
 
@@ -40,7 +39,7 @@ namespace Tune.Frontend.Pages
             content.Add(new StringContent(songName), "NameOfSong");
             content.Add(new ByteArrayContent(fileBytes), "mp3_file", Path.GetFileName(filePath));
             
-            // Add thumbnail if one was selected
+            
             if (_selectedThumbnailBytes != null && _selectedThumbnailBytes.Length > 0)
             {
                 content.Add(new ByteArrayContent(_selectedThumbnailBytes), "thumbnail_file", "thumbnail.png");
@@ -134,7 +133,6 @@ namespace Tune.Frontend.Pages
                     bitmap.EndInit();
                     ThumbnailPreview.Source = bitmap;
                     
-                    // Compress the thumbnail image before uploading
                     _selectedThumbnailBytes = CompressImage(dialog.FileName);
                 }
                 catch (Exception ex)
@@ -151,7 +149,7 @@ namespace Tune.Frontend.Pages
                 var bitmap = new System.Windows.Media.Imaging.BitmapImage();
                 bitmap.BeginInit();
                 bitmap.UriSource = new Uri(imagePath);
-                bitmap.DecodePixelWidth = 200; // Compress to max 200px width
+                bitmap.DecodePixelWidth = 200;
                 bitmap.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad;
                 bitmap.EndInit();
                 bitmap.Freeze();
@@ -167,7 +165,6 @@ namespace Tune.Frontend.Pages
             }
             catch
             {
-                // If compression fails, try to read the original file
                 return File.ReadAllBytes(imagePath);
             }
         }

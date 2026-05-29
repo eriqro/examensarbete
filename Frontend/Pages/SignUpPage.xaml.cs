@@ -15,7 +15,6 @@ namespace Tune.Frontend.Pages
             InitializeComponent();
         }
 
-        // When they hit the sign up button
         private async void SignUp_Click(object sender, RoutedEventArgs e)
         {
             string username = UsernameBox.Text;
@@ -23,7 +22,7 @@ namespace Tune.Frontend.Pages
             string confirmPassword = ConfirmPasswordBox.Password;
             string email = EmailBox.Text;
 
-            // Check they filled everything in
+            
             if (string.IsNullOrWhiteSpace(username) ||
                 string.IsNullOrWhiteSpace(password) ||
                 string.IsNullOrWhiteSpace(confirmPassword) ||
@@ -39,7 +38,6 @@ namespace Tune.Frontend.Pages
                 return;
             }
 
-            // Send registration to backend
             var baseUrl = AppConfig.GetBackendBaseUrl();
             Tune.Frontend.Services.ApiClient.SetBaseUrl(baseUrl);
 
@@ -60,7 +58,7 @@ namespace Tune.Frontend.Pages
                     return;
                 }
 
-                // Save the token and user info, then go to main page
+                
                 Tune.Frontend.Pages.CurrentUser.Token = data.token;
                 Tune.Frontend.Pages.CurrentUser.loggedInUserId = data.userId;
                 Tune.Frontend.Pages.CurrentUser.loggedInUser = data.username;
@@ -77,7 +75,6 @@ namespace Tune.Frontend.Pages
             }
         }
 
-        // Show messages to the user
         private void ShowNotification(string message, bool isError)
         {
             NotificationText.Text = message;

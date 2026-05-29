@@ -33,13 +33,11 @@ namespace Tune.Frontend.Pages
                 mediaElement.MediaOpened += MediaElement_MediaOpened;
             }
             
-            // Initialize progress timer
             _progressTimer = new DispatcherTimer();
             _progressTimer.Interval = TimeSpan.FromMilliseconds(100);
             _progressTimer.Tick += UpdateProgress;
             _progressTimer.Start();
             
-            // Set initial volume
             if (mediaElement != null)
             {
                 mediaElement.Volume = 0.5;
